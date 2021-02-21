@@ -13,12 +13,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.urlencoded( {extended: true} ));
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   // will store gifs here.
   let RESULT = [];
 
-  // fetching the gifs...
-  fetch("https://api.giphy.com/v1/gifs/trending?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=20")
+  fetch("https://api.giphy.com/v1/gifs/trending?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&")
   .then( async (r) => {
     // awaiting the promise to be fulfilled, so I can get the full data from the server.
     let data = await r.json();
@@ -33,22 +32,19 @@ app.get("/", (req, res) => {
         gifTitle: item.title
       });
     }
-
     res.render("index", {title: "Home", result: RESULT});
   })
-  .catch( (e) => {
-    console.log("Error: ", e);
-    res.render("index", {title: "error"});
+  .catch( (e)=>{
+    console.log(e);
   });
-
 });
 
 
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
   const { title } = req.body;
   let RESULT = [];
 
-  fetch("https://api.giphy.com/v1/gifs/search?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&q=" + title + "&limit=20")
+  fetch("https://api.giphy.com/v1/gifs/search?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&q=" + title)
   .then( async (r) => {
     // awaiting the promise to be fulfilled, so I can get the full data from the server.
     let data = await r.json();
@@ -63,14 +59,11 @@ app.post("/", (req, res) => {
         gifTitle: item.title
       });
     }
-
     res.render("index", {title: "Home", result: RESULT});
   })
-  .catch( (e) => {
+  .catch( (e)=>{
     console.log(e);
-    res.send("Something went wrong....");
   });
-
 });
 
 app.get("*", (req, res) => {

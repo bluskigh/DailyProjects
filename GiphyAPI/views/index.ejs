@@ -13,7 +13,7 @@
                             <img src="<%=section.imageUrl%>" alt="" height="<%=section.imageHeight%>" width="<%=section.imageWidth%>">
                             <section class="information" style="height: <%=section.imageHeight%>; width:<%=section.imageWidth%>">
                                 <h4><%=section.gifTitle%></h4>
-                                <button><3</button>
+                                <button onclick="like(this)"><3</button>
                             </section>
                         </div>
                     <% } %>
@@ -36,6 +36,11 @@
                 indiv.addEventListener("mouseleave", function(){
                     this.children[1].style.visibility = "hidden";
                 });
+            }
+            function like(obj)
+            {
+                obj.classList.toggle("liked");
+                const gifUrl = obj.parentElement.parentElement.children[0].src;
             }
         </script>
     </body> 

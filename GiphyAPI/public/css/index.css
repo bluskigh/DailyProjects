@@ -49,7 +49,7 @@ main
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 70%;
+  width: 90%;
 }
 
 main #result
@@ -116,6 +116,7 @@ button
   text-shadow: 0em 0em 2em white;
   box-shadow: inset 0em 0em 10em white;
 }
+
 .information button
 {
   margin: .5em 0;
@@ -130,7 +131,6 @@ button
 {
   transform: translateY(-2px);
   border: 1px solid red;
-  color: red;
   box-shadow: 0em 0em 2em white;
 }
 .information button:focus
@@ -141,4 +141,11 @@ button
 .hidden
 {
   visibility: none;
+}
+
+.information .liked
+{
+  background-color: red;
+  border: 1px solid white;
+  color: white;
 }
