@@ -1,0 +1,39 @@
+Session are on the server side.
+Cookies are stored in the browser.
+
+Cookies
+- have maximum size
+- if we had a lot of information we wanted to associate with the users, cookies are not good 
+- also not as secure as sessions
+
+Store informatino on the server side, send cookie back to the client
+
+{
+  id: 3,
+  shoppingCart: [
+    {item: "lime", qty: 1}
+    {item: "apples", qty: 2}
+    {item: "oranges", qty: 1}
+  ]
+}
+{
+  id: 4,
+  shoppingCart: [
+    {item: "lime", qty: 1}
+    {item: "apples", qty: 2}
+    {item: "oranges", qty: 1}
+  ]
+}
+
+server -----session id----> client
+server is sending back a session id as a cookie (browser stores that)
+
+client-----"I have a cookie for you!" session id is 4-----> server ----> data store ---> returns back relveant information
+
+So all we need to store in the browser, is store a session id (cookie).
+
+Also, not necesarilly the same as the database you're using for your application.... Separate.
+
+Sessions are universal... Example Flask contains session, flask_session
+
+
