@@ -1,0 +1,38 @@
+<%- include("partials/header") %>
+            <h1>Giphy Daily Project.</h1>
+            <form action="/search" method="GET">
+                <input type="text" name="Title" placeholder="Type here..." required>
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- gifs are going to go here -->
+            <section id="result">
+                <% for (const section of result) { %>
+                    <div class="indiv">
+                        <img src="<%=section.imageUrl%>" alt="" height="<%=section.imageHeight%>" width="<%=section.imageWidth%>">
+                        <section class="information" style="height: <%=section.imageHeight%>; width:<%=section.imageWidth%>">
+                            <h4><%=section.gifTitle%></h4>
+                            <button><3</button>
+                        </section>
+                    </div>
+                <% } %>
+            </section>
+        </main>
+
+        <script>
+            const resultContainer = document.querySelector("#result");
+
+            const individuals = document.querySelectorAll(".indiv");
+            for (const indiv of individuals)
+            {
+                indiv.addEventListener("mouseenter", function(){
+                    this.children[1].style.visibility = "visible";
+                });
+                indiv.addEventListener("mouseleave", function(){
+                    this.children[1].style.visibility = "hidden";
+                });
+            }
+
+        </script>
+    </body> 
+</html>

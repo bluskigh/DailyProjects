@@ -1,0 +1,143 @@
+body
+{
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+}
+
+header
+{
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+header nav
+{
+  width: 80%;
+}
+header nav ul
+{
+  padding-left: 0;
+  margin-left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  list-style-type: none;
+}
+
+header nav ul li a
+{
+  padding: 0 .5em;
+  text-decoration: none;
+  color: black;
+  transition: 1s ease;
+}
+header nav ul li a:hover
+{
+  color: gray;
+  text-decoration: underline 1px black;
+}
+
+main
+{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 70%;
+}
+
+main #result
+{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.indiv
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover
+{
+  position: absolute;
+  background: black;
+  transition: 1s ease;
+}
+.cover:hover
+{
+  background: transparent;
+}
+
+h4
+{
+  padding: 0;
+  margin: 0;
+}
+button
+{
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.information
+{
+  opacity: 0%;
+  visibility: hidden;
+  /* without this, the text will be frozen on the screen for 1 second after the user hovers out of it */
+  color:rgba(255, 255, 255, 0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: absolute;
+  background: transparent;
+  transition: .8s ease;
+}
+.information:hover
+{
+  opacity: 100%;
+  color: rgb(255, 255, 255);
+  visibility: visible;
+  background: black;
+  text-shadow: 0em 0em 2em white;
+  box-shadow: inset 0em 0em 10em white;
+}
+.information button
+{
+  margin: .5em 0;
+  padding: .5em 3em;
+  border: 2px solid white;
+  border-radius: 1em;
+  color: white;
+  background: rgb(41, 40, 40);
+  transition: .5s ease;
+}
+.information button:hover
+{
+  transform: translateY(-2px);
+  border: 1px solid red;
+  color: red;
+  box-shadow: 0em 0em 2em white;
+}
+.information button:focus
+{
+  outline: none;
+}
+
+.hidden
+{
+  visibility: none;
+}
