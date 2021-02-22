@@ -1,14 +1,28 @@
 <%- include("partials/header") %>
-            <h1>Giphy Daily Project.</h1>
-            <form action="/" method="POST">
-                <input type="text" name="title" placeholder="Type here..." required>
-                <button type="submit">Search</button>
-            </form>
+            <% if (favorites) { %>
+                <h1>Favorites</h1>
+                <section id="favoriteContainer">
+                    <% for (const section of favorites) { %>
+                        <div class="indiv">
+                            <img src="<%=section.url%>" alt="" height="<%=section.height%>" width="<%=section.width%>">
+                            <section class="information" style="height: <%=section.height%>; width:<%=section.width%>">
+                                <h4><%=section.title%></h4>
+                                <button class="liked" name=<%=section._id%> onclick="like(this)"><3</button>
+                            </section>
+                        </div>
+                    <% } %>
+                </section>
+            <% } else { %>
+                <h1>Giphy Daily Project.</h1>
+                <form action="/" method="POST">
+                    <input type="text" name="title" placeholder="Type here..." required>
+                    <button type="submit">Search</button>
+                </form>
 
-            <form action="/signup">
-                <button>Enter</button>
-            </form>
-            
+                <form action="/signup">
+                    <button>Enter</button>
+                </form>
+            <% } %>
 
             <!-- gifs are going to go here -->
             <section id="result">
@@ -18,18 +32,19 @@
                             <img src="<%=section.imageUrl%>" alt="" height="<%=section.imageHeight%>" width="<%=section.imageWidth%>">
                             <section class="information" style="height: <%=section.imageHeight%>; width:<%=section.imageWidth%>">
                                 <h4><%=section.gifTitle%></h4>
-                                <button onclick="like(this)"><3</button>
+                                <button class="<%=section.checked ? 'liked' : '' %>" name="<%=section.id%>" onclick="like(this)"><3</button>
                             </section>
                         </div>
                     <% } %>
                 <%  } else { %>
-                    <h3>Nothing is being showed......</h3>
+                    <!-- <h3>Nothing is being showed......</h3> -->
                 <%  } %>
             </section>
         </main>
 
         <script>
             const resultContainer = document.querySelector("#result");
+            const favoriteContainer = document.querySelector("#favoriteContainer");
 
             const individuals = document.querySelectorAll(".indiv");
             for (const indiv of individuals)
@@ -43,8 +58,66 @@
             }
             function like(obj)
             {
-                obj.classList.toggle("liked");
-                const gifUrl = obj.parentElement.parentElement.children[0].src;
+                // is liked, remove from the liked
+                if (obj.classList.contains("liked"))
+                {
+                    console.log("this ran");
+                    obj.classList.toggle("liked");
+                    fetch("/removeFavorite", {
+                        method: "POST",
+                        headers: new Headers({
+                            "content-type": "application/json"
+                        }),
+                        body: JSON.stringify({
+                            gif_id: obj.getAttribute("name")
+                        })
+                    })
+                    .then((r)=>{
+                        favoriteContainer.removeChild(this.parentElement.parentElement);
+                        console.log(r);
+                    })
+                    .catch(e=>console.log("Error"));
+                }
+                else
+                {
+                    // not liked, make it liked
+                    obj.classList.toggle("liked");
+
+                    const parent = obj.parentElement.parentElement;
+                    const gifUrl = parent.children[0].src;
+                    const gifWidth = parent.children[0].width;
+                    const gifHeight = parent.children[0].height;
+                    // TODO: find a better way to access children
+                    const gifTitle = parent.children[1].children[0].innerText; 
+
+                    const info = {
+                        url: gifUrl,
+                        width: gifWidth,
+                        height: gifHeight,
+                        title: gifTitle
+                    };
+
+                    fetch("/favorite", {
+                        method: "POST",
+                        headers: new Headers({
+                            "content-type": "application/json"
+                        }),
+                        body: JSON.stringify(info)
+                    })
+                    .then((r)=>{
+                        console.log(r.status);
+                        // could not complete this transaction
+                        if (r.status == 409)
+                        {
+                            alert("The program could not complete this transaction... Please try again.")
+                        }
+                        else
+                        {
+                            alert("Added to favorites");
+                        }
+                    })
+                    .catch(e=>console.log("Error..."))
+                }
             }
         </script>
     </body> 

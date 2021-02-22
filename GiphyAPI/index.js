@@ -15,11 +15,13 @@ mongoose.connect("mongodb://localhost:27017/gifApp", {useNewUrlParser: true, use
 
 // Gif schema
 const gifSchema = new mongoose.Schema({
+  user_id: Object,
   title: String,
   url: String,
-  imageUrl: String
+  width: Number,
+  height: Number
 });
-const Model = new mongoose.model("Gifs", gifSchema);
+const FavoriteModel = new mongoose.model("Favorites", gifSchema);
 
 // user schema
 const userSchema = new mongoose.Schema({
@@ -37,15 +39,14 @@ app.use(session({
   secret: "dailyproject",
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
 }))
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded( {extended: true} ));
+app.use(express.json());
 
 app.get("/", async (req, res) => {
-  console.log(req.session.user_id);
-  console.log(req.session.username);
+  const { username, user_id } = req.session;
   // will store gifs here.
   let RESULT = [];
 
@@ -54,17 +55,36 @@ app.get("/", async (req, res) => {
     // awaiting the promise to be fulfilled, so I can get the full data from the server.
     let data = await r.json();
     // extracting the actual data array from the response
+    //
     data = data.data; 
+
     for (const item of data)
     {
-      RESULT.push({
+      const info = {
         imageUrl: item.images.original.url,
         imageHeight: item.images.original.height,
         imageWidth: item.images.original.width,
-        gifTitle: item.title
-      });
+        gifTitle: item.title,
+      };
+
+      let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
+      // console.log("\nIs fav: ", isFav);
+      if (isFav.length)
+      {
+        info.id = isFav[0]._id;
+        info.checked = true;
+      }
+      else
+      {
+        info.id = null;
+        info.checked = false;
+      }
+      //console.log("Info: ", info);
+      RESULT.push(info);
     }
-    res.render("index", {title: "Home", result: RESULT, username: req.session.username});
+
+    // console.log("RESULT: ", RESULT);
+    res.render("index", {title: "Home", result: RESULT, username: username, favorites: null});
   })
   .catch( (e)=>{
     console.log(e);
@@ -85,13 +105,14 @@ app.post("/", async (req, res) => {
     for (const item of data)
     {
       RESULT.push({
+        id: item.id,
         imageUrl: item.images.original.url,
         imageHeight: item.images.original.height,
         imageWidth: item.images.original.width,
         gifTitle: item.title
       });
     }
-    res.render("index", {title: "Home", result: RESULT, username: req.session.username});
+    res.render("index", {title: "Home", result: RESULT, username: req.session.username, favorites: null});
   })
   .catch( (e)=>{
     console.log(e);
@@ -104,22 +125,16 @@ app.get("/login", (req, res) => {
   res.render("enterInformation", {title: "Log In", login: true, username: req.session.username});
 });
 app.post("/login", (req, res) => {
-  console.log(req.session.username);
-  console.log(req.session.user_id);
   const { username, password } = req.body;
   // TODO: figure out how to hash the password, and unhas to check
   // check if the user exists
   UserModel.findOne({username: username, password: password})
   .then( (r)=>{
-    console.log("THis ran, log in ");
     if(r)
     {
-      console.log("Logged in the user");
       // sign the user in...
       req.session.user_id = r._id;
-      console.log(req.session.user_id);
       req.session.username = username;
-      console.log(req.session.username);
 
       // redirect the user to the homepage
       res.redirect("/");
@@ -127,6 +142,7 @@ app.post("/login", (req, res) => {
     else
     {
       res.send("That is not in our database");
+    }
   }).catch(e=>console.log(e))
 });
 
@@ -152,7 +168,6 @@ app.post("/signup", (req, res) => {
     }
     else
     {
-      console.log("Signed up the user");
       // does nto exist, so craete the user and redirect as logged in.
 
       // creating user item, to store in the database
@@ -179,12 +194,60 @@ app.get("/signout", (req, res)=>{
   res.redirect("/");
 });
 
+app.get("/favorite", (req, res)=>{
+  // return an array of objects which contain releveant information 
+  FavoriteModel.find({user_id: req.session.user_id})
+  .then((r)=>{
+    res.render("index", {title: "Favorites", result: null, username: req.session.username, favorites: r});
+  })
+  .catch(e=>console.log("errrrrrror"));
+});
+
+app.post("/favorite", (req, res)=>{
+  const { url, title, width, height } = req.body;
+  // save to the favorites
+  if (url && title && width && height)
+  {
+    const tempFav = new FavoriteModel({ 
+      user_id: req.session.user_id,
+      title: title,
+      url: url,
+      width: width,
+      height: height,
+    });
+    // saving tothe Favorites collection
+    tempFav.save();
+
+    res.status(200);
+  }
+  else
+  {
+    res.status(409);
+  }
+});
+
+app.post("/removeFavorite", (req, res)=>{
+  const { gif_id } = req.body;
+  // find the gif_id in the database
+  try
+  {
+    FavoriteModel.deleteMany({_id: gif_id, user_id: req.session.user_id})
+    .then((r)=>{
+      if (!r)
+      {
+        console.log("Error, did not find that.");
+      }
+    })
+    .catch(e=>console.error(e));
+  }catch(e){
+    console.log(e);
+  }
+});
 
 // If all else fails...
 app.get("*", (req, res) => {
   res.send("That does not exist....");
 });
-
 
 app.listen(3000, () => {
   console.log("Listening on port 3000");
