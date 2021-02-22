@@ -44,8 +44,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded( {extended: true} ));
 
 app.get("/", async (req, res) => {
-  console.log(req.session.user_id);
-  console.log(req.session.username);
+  console.log(req.session);
+
   // will store gifs here.
   let RESULT = [];
 
@@ -64,7 +64,7 @@ app.get("/", async (req, res) => {
         gifTitle: item.title
       });
     }
-    res.render("index", {title: "Home", result: RESULT, username: req.session.username});
+    res.render("index", {title: "Home", result: RESULT});
   })
   .catch( (e)=>{
     console.log(e);
@@ -91,7 +91,7 @@ app.post("/", async (req, res) => {
         gifTitle: item.title
       });
     }
-    res.render("index", {title: "Home", result: RESULT, username: req.session.username});
+    res.render("index", {title: "Home", result: RESULT});
   })
   .catch( (e)=>{
     console.log(e);
@@ -101,39 +101,31 @@ app.post("/", async (req, res) => {
 ///////////////// Log IN
 // trying to get to the login page
 app.get("/login", (req, res) => {
-  res.render("enterInformation", {title: "Log In", login: true, username: req.session.username});
+  res.render("enterInformation", {title: "Log In", login: true});
 });
 app.post("/login", (req, res) => {
-  console.log(req.session.username);
-  console.log(req.session.user_id);
   const { username, password } = req.body;
   // TODO: figure out how to hash the password, and unhas to check
   // check if the user exists
   UserModel.findOne({username: username, password: password})
   .then( (r)=>{
-    console.log("THis ran, log in ");
-    if(r)
+    if (r.length)
     {
-      console.log("Logged in the user");
       // sign the user in...
       req.session.user_id = r._id;
-      console.log(req.session.user_id);
       req.session.username = username;
-      console.log(req.session.username);
 
       // redirect the user to the homepage
       res.redirect("/");
     }
-    else
-    {
-      res.send("That is not in our database");
   }).catch(e=>console.log(e))
+  res.redirect("/");
 });
 
 /////////////////// Sign Up
 // if person is trying to get to the sign up page
 app.get("/signup", (req, res) => {
-  res.render("enterInformation", {title: "Sign Up", login:false, username: req.session.username}); 
+  res.render("enterInformation", {title: "Sign Up", login:false}); 
 });
 // if person is trying to sign up, via post requset
 app.post("/signup", (req, res) => {
@@ -152,7 +144,6 @@ app.post("/signup", (req, res) => {
     }
     else
     {
-      console.log("Signed up the user");
       // does nto exist, so craete the user and redirect as logged in.
 
       // creating user item, to store in the database
@@ -166,17 +157,9 @@ app.post("/signup", (req, res) => {
 
       // now redirect the user
       res.redirect("/");
-     }
-    })
+    }
+      })
   .catch(e=>console.log(e))
-});
-
-//////////////// Sign Out
-app.get("/signout", (req, res)=>{
-  // signing out the user, same as session.clear() from Flask
-  req.session.destroy();
-  // redirect the user back to the main page
-  res.redirect("/");
 });
 
 

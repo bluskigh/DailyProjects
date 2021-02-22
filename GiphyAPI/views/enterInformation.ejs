@@ -1,0 +1,17 @@
+<% include("partials/header") %>
+    <% if (login) { %>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="username" required>
+            <input type="password" name="password" placeholder="password" required>
+            <button type="Submit">Log In</button>
+        </form>
+    <% } else { %>
+        <form action="/signup" method="post">
+            <input type="text" name="username" placeholder="username" required>
+            <input type="password" name="password" placeholder="password" required>
+            <input type="password" name="confirmation" placeholder="Re-type Password" required>
+            <button type="Submit">Sign Up</button>
+        </form>
+    <% } %>
+    </body>
+</html>

@@ -8,6 +8,11 @@ const app = express();
 const sessionOptions = { secret: "dailyProject", resave: false, saveUninitialized: false};
 app.use(session(sessionOptions));
 
+app.get("/", (req, res)=>{
+  const count = req.session.count;
+  res.send("Welcome back, "+count);
+});
+
 // on our req object, we are going to have a secret available
 //
 app.get("/viewcount", (req, res) => {
@@ -21,7 +26,7 @@ app.get("/viewcount", (req, res) => {
   {
     req.session.count=1;
   }
-  res.send("You have viewed this page : "+req.session.count);
+  res.send("Salskdjflaksjf");
 });
 
 // default store, is in memory store.
