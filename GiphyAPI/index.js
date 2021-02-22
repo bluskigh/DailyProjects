@@ -46,49 +46,49 @@ app.use(express.urlencoded( {extended: true} ));
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  const { username, user_id } = req.session;
+  const { username } = req.session;
   // will store gifs here.
-  let RESULT = [];
 
-  fetch("https://api.giphy.com/v1/gifs/trending?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&")
-  .then( async (r) => {
-    // awaiting the promise to be fulfilled, so I can get the full data from the server.
-    let data = await r.json();
-    // extracting the actual data array from the response
-    //
-    data = data.data; 
+  // fetch("https://api.giphy.com/v1/gifs/trending?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&")
+  // .then( async (r) => {
+  //   // awaiting the promise to be fulfilled, so I can get the full data from the server.
+  //   let data = await r.json();
+  //   // extracting the actual data array from the response
+  //   //
+  //   data = data.data; 
 
-    for (const item of data)
-    {
-      const info = {
-        imageUrl: item.images.original.url,
-        imageHeight: item.images.original.height,
-        imageWidth: item.images.original.width,
-        gifTitle: item.title,
-      };
+  //   for (const item of data)
+  //   {
+  //     const info = {
+  //       imageUrl: item.images.original.url,
+  //       imageHeight: item.images.original.height,
+  //       imageWidth: item.images.original.width,
+  //       gifTitle: item.title,
+  //     };
 
-      let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
-      // console.log("\nIs fav: ", isFav);
-      if (isFav.length)
-      {
-        info.id = isFav[0]._id;
-        info.checked = true;
-      }
-      else
-      {
-        info.id = null;
-        info.checked = false;
-      }
-      //console.log("Info: ", info);
-      RESULT.push(info);
-    }
+  //     let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
+  //     // console.log("\nIs fav: ", isFav);
+  //     if (isFav.length)
+  //     {
+  //       info.id = isFav[0]._id;
+  //       info.checked = true;
+  //     }
+  //     else
+  //     {
+  //       info.id = null;
+  //       info.checked = false;
+  //     }
+  //     //console.log("Info: ", info);
+  //     RESULT.push(info);
+  //   }
 
-    // console.log("RESULT: ", RESULT);
-    res.render("index", {title: "Home", result: RESULT, username: username, favorites: null});
-  })
-  .catch( (e)=>{
-    console.log(e);
-  });
+  //   // console.log("RESULT: ", RESULT);
+  //   res.render("index", {title: "Home", result: RESULT, username: username, favorites: null});
+  // })
+  // .catch( (e)=>{
+  //   console.log(e);
+  // });
+  res.render("index", {title: "Home", username: username, favorites: null});
 });
 
 
@@ -105,7 +105,7 @@ app.post("/", async (req, res) => {
     for (const item of data)
     {
       RESULT.push({
-        id: item.id,
+        // id: item.id,
         imageUrl: item.images.original.url,
         imageHeight: item.images.original.height,
         imageWidth: item.images.original.width,
@@ -113,6 +113,57 @@ app.post("/", async (req, res) => {
       });
     }
     res.render("index", {title: "Home", result: RESULT, username: req.session.username, favorites: null});
+  })
+  .catch( (e)=>{
+    console.log(e);
+  });
+});
+
+
+app.get("/getSomething/:query", (req, res)=>{
+  const { query } = req.params;
+  const { user_id } = req.session;
+  let queryString = "&q=" + query;
+  let type = "search";
+  if (query==="trending")
+  {
+    type="trending";
+    queryString = "";
+  }
+
+  fetch("https://api.giphy.com/v1/gifs/" + type + "?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5" + queryString)
+  .then( (r)=>r.json())
+  .then( async (r)=>{
+    let RESULT = [];
+    for (const item of r.data)
+    {
+      // saving the current information 
+      let info = {
+        url: item.images.original.url,
+        height: item.images.original.height,
+        width: item.images.original.width,
+        title: item.title,
+      };
+
+      // checking if the current item is part of the users favorites
+      let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
+      // if the item was found, then mark as checked (on web, will show hearted), set the info's id to be the current item's id found
+      if (isFav.length)
+      {
+        info.id = isFav[0]._id;
+        info.checked = true;
+      }
+      else
+      {
+        info.id = null;
+        info.checked = false;
+      }
+
+      // push onto the result array (the current info object, which contains all the information)
+      RESULT.push(info);
+    }
+
+    res.send(JSON.stringify({result: RESULT}));
   })
   .catch( (e)=>{
     console.log(e);

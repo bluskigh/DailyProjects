@@ -11,12 +11,12 @@
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/favorite">Favorites</a></li>
                 <% if (!username) { %>
                     <li><a href="/signup">Sign Up</a></li>
                     <li><a href="/login">Log In</a></li>
                 <% } else { %>
                     <li><a href="/signout">Sign Out</a></li>
+                    <li><a href="/favorite">Favorites</a></li>
                 <% } %>
             </ul>
         </nav>
