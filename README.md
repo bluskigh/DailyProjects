@@ -5,5 +5,5 @@ If I'm creating a repo saying that I am starting a project, I am obligated to fi
 Also, I want to start tracking my projects that I am creating in my free-time :)
 ## Projects
 ### 1) Giphy API
-Quick summary, develop to learn more about Express/Mongoose/EJS. To und further, the Giphy API folder contains a README.
+Quick summary, developed to learn more about Express/Mongoose/EJS. To understand further, the Giphy API folder contains it own README.
 ### X) More to come...
