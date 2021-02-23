@@ -123,7 +123,7 @@ app.post("/login", (req, res) => {
     }
     else
     {
-      res.send("That is not in our database");
+      res.render("error", {message: "Invalid username and password"});
     }
   }).catch(e=>console.log(e))
 });

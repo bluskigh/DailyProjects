@@ -170,7 +170,7 @@ button
   color: black;
 }
 
-#result
+.result
 {
   height: fit-content;
   margin: 0 auto;
@@ -186,10 +186,42 @@ button
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
+}
+.column:nth-child(1)
+{
+  align-items: flex-end;
 }
 
 .column div
 {
   margin: .5em;
+}
+
+input
+{
+  border-radius: .4em;
+  padding: .5em 2em;
+  color: black;
+}
+input:focus{
+  border: 1px solid red;
+}
+button
+{
+  background-color: white;
+  padding: .3em 2em;
+  margin-bottom: 1em;
+}
+button:hover
+{
+  cursor: pointer;
+}
+
+.notLogged
+{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

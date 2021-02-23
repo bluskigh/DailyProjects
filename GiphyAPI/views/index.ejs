@@ -4,33 +4,21 @@
             <% if (favorites) { %>
                 <h1>Favorites</h1>
                 <section id="favoriteContainer">
-                    <section id="result">
+                    <section class="result">
                         <section class="column"></section>
                         <section class="column"></section>
                         <section class="column"></section>
                     </section>
 
                 </section>
-                <!-- <section id="favoriteContainer">
-                    <% for (const section of favorites) { %>
-                        <div class="indiv">
-                            <img src="<%=section.url%>" alt="" style="height=<%=section.height%> width=<%=section.width%>%>">
-                            <section class="information" style="height: <%=section.height%>; width:<%=section.width%>">
-                                <h4><%=section.title%></h4>
-                                <button class="liked" name=<%=section._id%>><3</button>
-                            </section>
-                        </div>
-                    <% } %>
-                </section> -->
-
             <% } else { %>
                 <main>
                     <h1>Giphy Daily Project.</h1>
-                    <input type="text" name="title" placeholder="Type here..." required>
+                    <input type="text" name="title" placeholder="Type here..." autocomplete="off" required>
                     <button type="submit">Search</button>
 
                     <!-- gifs are going to go here -->
-                    <section id="result">
+                    <section class="result">
                         <section class="column"></section>
                         <section class="column"></section>
                         <section class="column"></section>
@@ -38,6 +26,7 @@
                 </main>
             <% } %>
         </main>
+        <!-- By Mario Molinito -->
 
         <script>
 
@@ -45,8 +34,8 @@
             let newGifs = [];
 
             ////////// containers
-            const favoriteContainer = document.querySelectorAll("#favoriteContainer #result .column");
-            const sections = document.querySelectorAll("#result .column");
+            const favoriteContainer = document.querySelectorAll("#favoriteContainer .result .column");
+            const sections = document.querySelectorAll(".result .column");
 
             let individuals = null;
 
@@ -146,13 +135,13 @@
                     //// container div
                     const div = document.createElement("div");
                     div.classList.add("indiv");
-                    div.style.height = current.height;
-                    div.style.width =  "100%";
+                    div.style.height = "fit-content";
+                    div.style.width = "100%";
 
                     ////// image
                     const image = document.createElement("img");
                     image.src = current.url;
-                    image.style.height = "100%";
+                    image.style.height = "fit-content";
                     image.style.width = "100%";
 
                     ////// section .information 

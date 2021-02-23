@@ -17,15 +17,26 @@
                         <li><a href="/login">Log In</a></li>
                     <% } else { %>
                         <li><a href="/favorite">Favorites</a></li>
-                    <% } %>
                 </div>
                 <div>
                     <li><a href="/signout">Sign Out</a></li>
                     <li id="me">Mario Molinito</li>
                 </div>
+                    <% } %>
             </ul>
         </nav>
     </header>
     <hr>
 
+    <script>
+        const ul = document.querySelector("ul");
+        if (ul.children.length == 1)
+        {
+            ul.children[0].classList.add("notLogged");
+        }
+        else
+        {
+            ul.children[0].classList.remove("notLogged");
+        }
+    </script>
     <main>
