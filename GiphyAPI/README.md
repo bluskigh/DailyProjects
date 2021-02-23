@@ -23,13 +23,13 @@ the current user in the browser. It should be assumed that password should not b
 to figure out who is currently browsing the website. So, with the help of **express-session** I was able to keep track of the
 user's id and Mongoose helped me get relevant information from the database based on the id.
 # Knowledge expanded
-## 1) Sessions (beginner)
-## 2) Routes (confident)
-## 3) Templates (confident)
-## 4) EJS (confident)
-## 5) FlexBox (confident)
-## 6) Express (beginner)
-## 7) Mongoose/MongoDB (child)
+### 1) Sessions (beginner)
+### 2) Routes (confident)
+### 3) Templates (confident)
+### 4) EJS (confident)
+### 5) FlexBox (confident)
+### 6) Express (beginner)
+### 7) Mongoose/MongoDB (child)
 
 # Examples
 ## Signed Out Home Page
