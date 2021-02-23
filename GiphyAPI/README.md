@@ -32,10 +32,15 @@ user's id and Mongoose helped me get relevant information from the database base
 ## 7) Mongoose/MongoDB (child)
 
 # Examples
+## Signed Out Home Page
 ![Home Screen](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/signedOut.PNG?raw=true)
+## Signed In Home Page
 ![Signed In](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/signedIn.PNG?raw=true)
+## Hovered
 ![Hovered](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/hovered.PNG?raw=true)
+## Liked
 ![Liked](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/liked.PNG?raw=true)
+## Favorite's Page
 ![Favorites](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/favorites.PNG?raw=true)
 
 I really liked this project ;) **The layout came out amazing!!!!!**
