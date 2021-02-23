@@ -7,6 +7,7 @@ body
   color: white;
 }
 
+
 header
 {
   margin: 0;
@@ -24,11 +25,26 @@ header nav ul
   padding-left: 0;
   margin-left: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   flex-direction: row;
   list-style-type: none;
 }
+
+header nav ul div
+{
+  display: flex;
+  flex-direction: column;
+}
+header nav ul div:nth-child(2)
+{
+  align-items: flex-end;
+}
+header nav ul div #me
+{
+  color: rgba(255, 0, 0, 0.604);
+}
+
 
 header nav ul li a
 {
@@ -100,7 +116,16 @@ button
   position: absolute;
   background: transparent;
   transition: .8s ease;
+  text-align: center;
 }
+.information a
+{
+  margin: .5em 0;
+  border: 1px solid black;
+  color: white;
+  font-size: .8em;
+}
+
 .informationHovered
 {
   opacity: 100%;
@@ -123,6 +148,7 @@ button
 }
 .information button:hover
 {
+  cursor: pointer;
   transform: translateY(-2px);
   border: 1px solid red;
   box-shadow: 0em 0em 2em white;

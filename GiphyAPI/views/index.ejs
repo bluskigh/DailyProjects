@@ -4,6 +4,14 @@
             <% if (favorites) { %>
                 <h1>Favorites</h1>
                 <section id="favoriteContainer">
+                    <section id="result">
+                        <section class="column"></section>
+                        <section class="column"></section>
+                        <section class="column"></section>
+                    </section>
+
+                </section>
+                <!-- <section id="favoriteContainer">
                     <% for (const section of favorites) { %>
                         <div class="indiv">
                             <img src="<%=section.url%>" alt="" style="height=<%=section.height%> width=<%=section.width%>%>">
@@ -13,7 +21,8 @@
                             </section>
                         </div>
                     <% } %>
-                </section>
+                </section> -->
+
             <% } else { %>
                 <main>
                     <h1>Giphy Daily Project.</h1>
@@ -36,8 +45,8 @@
             let newGifs = [];
 
             ////////// containers
-            const favoriteContainer = document.querySelector("#favoriteContainer");
-            const sections = document.querySelectorAll(".column");
+            const favoriteContainer = document.querySelectorAll("#favoriteContainer #result .column");
+            const sections = document.querySelectorAll("#result .column");
 
             let individuals = null;
 
@@ -127,6 +136,61 @@
                 });
             }
 
+            function addButtonsToSections(container, gifs, isFavorite)
+            {
+                for (const gif in gifs)
+                {
+                    // stores the current gif
+                    const current = gifs[gif];
+
+                    //// container div
+                    const div = document.createElement("div");
+                    div.classList.add("indiv");
+                    div.style.height = current.height;
+                    div.style.width =  "100%";
+
+                    ////// image
+                    const image = document.createElement("img");
+                    image.src = current.url;
+                    image.style.height = "100%";
+                    image.style.width = "100%";
+
+                    ////// section .information 
+                    const sectionInformation = document.createElement("section");
+                    sectionInformation.classList.add("information");
+                    sectionInformation.style.height = current.height;
+
+                    ////// section h4
+                    const h4 = document.createElement("h4");
+                    h4.innerText = current.title;
+                    const a = document.createElement("a");
+                    a.innerText = "Link To Gif!";
+                    a.href = current.url;
+                    //////// section button
+                    const button = document.createElement("button");
+                    button.innerText = "<3";
+                    button.name = current.id;
+
+                    div.appendChild(image);
+                    sectionInformation.appendChild(h4);
+                    sectionInformation.appendChild(a);
+                    sectionInformation.appendChild(button);
+                    div.appendChild(sectionInformation);
+
+                    if (current.checked || isFavorite)
+                    {
+                        button.classList.add("liked");
+                    }
+
+                    // adding the button functionality
+                    addButtonFunctionality(button, current);
+
+                    // adding the current gif (with all its elements) to the columns.
+                    container[last%3].appendChild(div);
+                    newGifs.push(div);
+                    last += 1;
+                } // end of for
+            }
 
             // for trending, put trending past the / mark 
             function getGifs(trending)
@@ -146,55 +210,8 @@
                 .then( (r)=>r.json() )
                 .then( (r) => {
                     const array = r.result;
-                    for (const gif in array)
-                    {
-                        // stores the current gif
-                        const current = array[gif];
-
-                        //// container div
-                        const div = document.createElement("div");
-                        div.classList.add("indiv");
-                        div.style.height = current.height;
-                        div.style.width =  "100%";
-
-                        ////// image
-                        const image = document.createElement("img");
-                        image.src = current.url;
-                        image.style.height = "100%";
-                        image.style.width = "100%";
-
-                        ////// section .information 
-                        const sectionInformation = document.createElement("section");
-                        sectionInformation.classList.add("information");
-                        sectionInformation.style.height = current.height;
-
-                        ////// section h4
-                        const h4 = document.createElement("h4");
-                        h4.innerText = current.title;
-                        //////// section button
-                        const button = document.createElement("button");
-                        button.innerText = "<3";
-                        button.name = current.id;
-
-                        div.appendChild(image);
-                        sectionInformation.appendChild(h4);
-                        sectionInformation.appendChild(button);
-                        div.appendChild(sectionInformation);
-
-                        if (current.checked)
-                        {
-                            button.classList.add("liked");
-                        }
-
-                        // adding the button functionality
-                        addButtonFunctionality(button, current);
-
-                        // adding the current gif (with all its elements) to the columns.
-                        sections[last%3].appendChild(div);
-                        newGifs.push(div);
-                        last += 1;
-                    } // end of for
-
+                    // add the buttons to sections container
+                    addButtonsToSections(sections, array, false);
                     return r;
                 })
                 .then(r=>updateInvidiuals())
@@ -210,21 +227,11 @@
                 individuals = document.querySelectorAll(".indiv");
                 // get information from fravorites 
                 // loop through the information, and set each to have a event listener
-
                 fetch("/getFavorites")
                 .then( (r)=>r.json() )
                 .then( (r)=>{
-
-                    newGifs = individuals;
-
+                    addButtonsToSections(favoriteContainer, r, true);
                     updateInvidiuals();
-
-                    for (const gif in r)
-                    {
-                        const button = individuals[gif].children[1].children[1];
-                        console.log(button);
-                        addButtonFunctionality(button, r[gif]);
-                    }
                 })
                 .catch(e=>console.error(e));
             }

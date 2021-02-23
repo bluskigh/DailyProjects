@@ -62,7 +62,7 @@ app.get("/getSomething/:query", (req, res)=>{
     queryString = "";
   }
 
-  fetch("https://api.giphy.com/v1/gifs/" + type + "?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5" + queryString)
+  fetch("https://api.giphy.com/v1/gifs/" + type + "?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=10" + queryString)
   .then( (r)=>r.json())
   .then( async (r)=>{
     let RESULT = [];
@@ -93,8 +93,6 @@ app.get("/getSomething/:query", (req, res)=>{
       // push onto the result array (the current info object, which contains all the information)
       RESULT.push(info);
     }
-
-    console.log(RESULT);
 
     res.send(JSON.stringify({result: RESULT}));
   })
