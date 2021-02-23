@@ -9,7 +9,7 @@ the potential of this program!
 # 2) Folders for certain gifs.
 # x) more to come...
 ## Roadblocks?
-I encountered many roadblocks through the program. First I had to decide whether I wanted to use SQL or MongoDB
+I encountered many roadblocks throughout the development of the program. First I had to decide whether I wanted to use SQL or MongoDB
 for my database storage. With much research, it came down to MongoDB as it had a package named **Mongoose** that
 made it easier for node to communicate with MongoDB. If I were using Python/Flask then my choice would be SQL.
 ## Major problem
