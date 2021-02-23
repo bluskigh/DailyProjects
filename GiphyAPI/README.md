@@ -5,9 +5,9 @@ Of course, it's a very simple application, so I still have much to learn but for
 I used **express** for server-side operations, and with the help of **mongoose**, I stored information such as: *sign up*, *log in*, and *favorites*. When I have free-time/more knowledge I would like to further the
 the potential of this program!
 ## Features to be added in the future
-# 1) Algorithm to show gifs based on the past searches (learn?)
-# 2) Folders for certain gifs.
-# x) more to come...
+### 1) Algorithm to show gifs based on the past searches (learn?)
+### 2) Folders for certain gifs.
+### x) more to come...
 ## Roadblocks?
 I encountered many roadblocks throughout the development of the program. First I had to decide whether I wanted to use SQL or MongoDB
 for my database storage. With much research, it came down to MongoDB as it had a package named **Mongoose** that
@@ -30,6 +30,13 @@ user's id and Mongoose helped me get relevant information from the database base
 ## 5) FlexBox (confident)
 ## 6) Express (beginner)
 ## 7) Mongoose/MongoDB (child)
+
+# Examples
+![Home Screen](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/signedOut.PNG?raw=true)
+![Signed In](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/signedIn.PNG?raw=true)
+![Hovered](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/hovered.PNG?raw=true)
+![Liked](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/liked.PNG?raw=true)
+![Favorites](https://github.com/theloneprogrammer729/DailyProjects/blob/main/GiphyAPI/images/favorites.PNG?raw=true)
 
 I really liked this project ;) **The layout came out amazing!!!!!**
 Mario Molinito
