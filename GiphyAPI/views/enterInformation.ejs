@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Enformation</title>
+    <style>
+        body
+        {
+            margin: 0;
+            padding: 0;
+            background: rgb(33, 33, 33);
+            color: white;
+        }
+        main
+        {
+            background: trasparent;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1
+        {
+            font-weight: bold;
+            font-size: 2em;
+        }
+        input, button
+        {
+            padding: .5em 2em;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <main>
+
+        <% if (login) { %>
+            <h1>Log In</h1>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="username" required>
+                <input type="password" name="password" placeholder="password" required>
+                <button type="Submit">Log In</button>
+            </form>
+        <% } else { %>
+            <h1>Sign Up</h1>
+            <form action="/signup" method="post">
+                <input type="text" name="username" placeholder="username" required>
+                <input type="password" name="password" placeholder="password" required>
+                <input type="password" name="confirmation" placeholder="Re-type Password" required>
+                <button type="Submit">Sign Up</button>
+            </form>
+        <% } %>
+
+    </main>
+    </body>
+</html>

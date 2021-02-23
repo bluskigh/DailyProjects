@@ -1,0 +1,227 @@
+body
+{
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  background: rgb(34, 33, 33);
+  color: white;
+}
+
+
+header
+{
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+header nav
+{
+  width: 80%;
+}
+header nav ul
+{
+  padding-left: 0;
+  margin-left: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+  list-style-type: none;
+}
+
+header nav ul div
+{
+  display: flex;
+  flex-direction: column;
+}
+header nav ul div:nth-child(2)
+{
+  align-items: flex-end;
+}
+header nav ul div #me
+{
+  color: rgba(255, 0, 0, 0.604);
+}
+
+
+header nav ul li a
+{
+  padding: 0 .5em;
+  text-decoration: none;
+  color: white;
+  transition: 1s ease;
+}
+header nav ul li a:hover
+{
+  color: gray;
+  text-decoration: underline 1px black;
+}
+
+main
+{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.indiv
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-basis: auto;
+  transition: .5s ease;
+}
+.indiv:hover
+{
+  filter: grayscale(100%);
+}
+
+.indiv img
+{
+  transition: .5s ease;
+}
+.blurImage
+{
+  filter: blur(10px);
+}
+
+h4
+{
+  padding: 0;
+  margin: 0;
+}
+button
+{
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.information
+{
+  opacity: 0%;
+  visibility: hidden;
+  /* without this, the text will be frozen on the screen for 1 second after the user hovers out of it */
+  color:rgba(255, 255, 255, 0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: absolute;
+  background: transparent;
+  transition: .8s ease;
+  text-align: center;
+}
+.information a
+{
+  margin: .5em 0;
+  border: 1px solid black;
+  color: white;
+  font-size: .8em;
+}
+
+.informationHovered
+{
+  opacity: 100%;
+  color:rgb(255, 255, 255);
+  text-shadow: 0em 0em .5em black;
+}
+/* .information:hover
+{
+} */
+
+.information button
+{
+  margin: .5em 0;
+  padding: .5em 3em;
+  border: 2px solid white;
+  border-radius: 1em;
+  color: white;
+  background: rgb(41, 40, 40);
+  transition: .5s ease;
+}
+.information button:hover
+{
+  cursor: pointer;
+  transform: translateY(-2px);
+  border: 1px solid red;
+  box-shadow: 0em 0em 2em white;
+}
+.information button:focus
+{
+  outline: none;
+}
+
+.hidden
+{
+  visibility: none;
+}
+
+.information .liked
+{
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+}
+
+.result
+{
+  height: fit-content;
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.column
+{
+  margin: .5em;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.column:nth-child(1)
+{
+  align-items: flex-end;
+}
+
+.column div
+{
+  margin: .5em;
+}
+
+input
+{
+  border-radius: .4em;
+  padding: .5em 2em;
+  color: black;
+}
+input:focus{
+  border: 1px solid red;
+}
+button
+{
+  background-color: white;
+  padding: .3em 2em;
+  margin-bottom: 1em;
+}
+button:hover
+{
+  cursor: pointer;
+}
+
+.notLogged
+{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

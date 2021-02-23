@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body
+        {
+            background: black;
+            margin: 0;
+            padding: 0;
+        }
+        main
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            height: 100vh;
+            width: 100%;
+            color: white;
+        }
+        span
+        {
+            color: red;
+            font-weight: bold;
+        }
+        .hidden
+        {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1><%=message%></h1>
+    </main>
+    <script>
+        const span = document.querySelector("h1");
+        const blink = ()=>{
+            setTimeout(()=>{
+                span.classList.toggle("hidden");
+                blink();
+            }, 400);
+        }
+        blink();
+    </script>
+</body>
+</html>

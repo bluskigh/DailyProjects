@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=title%></title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <div>
+                    <li><a href="/">Home</a></li>
+                    <% if (!username) { %>
+                        <li><a href="/signup">Sign Up</a></li>
+                        <li><a href="/login">Log In</a></li>
+                    <% } else { %>
+                        <li><a href="/favorite">Favorites</a></li>
+                </div>
+                <div>
+                    <li><a href="/signout">Sign Out</a></li>
+                    <li id="me">Mario Molinito</li>
+                </div>
+                    <% } %>
+            </ul>
+        </nav>
+    </header>
+    <hr>
+
+    <script>
+        const ul = document.querySelector("ul");
+        if (ul.children.length == 1)
+        {
+            ul.children[0].classList.add("notLogged");
+        }
+        else
+        {
+            ul.children[0].classList.remove("notLogged");
+        }
+    </script>
+    <main>
