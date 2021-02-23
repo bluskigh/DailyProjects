@@ -1,4 +1,4 @@
-### Giphy API
+# Giphy API
 ## Purpose.
 I decided to start this project for the sole purpose of learning how to use Express/MongoDB together.
 Of course, it's a very simple application, so I still have much to learn but for now, the goal has been met. 
@@ -12,24 +12,24 @@ the potential of this program!
 I encountered many roadblocks through the program. First I had to decide whether I wanted to use SQL or MongoDB
 for my database storage. With much research, it came down to MongoDB as it had a package named **Mongoose** that
 made it easier for node to communicate with MongoDB. If I were using Python/Flask then my choice would be SQL.
-# Major problem
+## Major problem
 I took inspiration from the Giphy layout of their gifs. So I had to create three separate columns which would store all
 the gifs. By looping over each gif, I could find the index and module by x amount of columns there are on the page.
 Successfully placing each gif in the right column, thus giving me the Giphy layout; with the help of flexbox, I was able to
 make the page responsive too.
-# Medium Problem
+## Medium Problem
 I had to learn a bit about *Sessions* from express, as from previous knowledge sessions help store vital information of 
 the current user in the browser. It should be assumed that password should not be stored in the browser, but a certain identifier
 to figure out who is currently browsing the website. So, with the help of **express-session** I was able to keep track of the
 user's id and Mongoose helped me get relevant information from the database based on the id.
-## Knowledge expanded
-# 1) Sessions (beginner)
-# 2) Routes (confident)
-# 3) Templates (confident)
-# 4) EJS (confident)
-# 5) FlexBox (confident)
-# 6) Express (beginner)
-# 7) Mongoose/MongoDB (child)
+# Knowledge expanded
+## 1) Sessions (beginner)
+## 2) Routes (confident)
+## 3) Templates (confident)
+## 4) EJS (confident)
+## 5) FlexBox (confident)
+## 6) Express (beginner)
+## 7) Mongoose/MongoDB (child)
 
 I really liked this project ;) **The layout came out amazing!!!!!**
 Mario Molinito
