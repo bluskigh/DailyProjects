@@ -47,76 +47,7 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   const { username } = req.session;
-  // will store gifs here.
-
-  // fetch("https://api.giphy.com/v1/gifs/trending?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&")
-  // .then( async (r) => {
-  //   // awaiting the promise to be fulfilled, so I can get the full data from the server.
-  //   let data = await r.json();
-  //   // extracting the actual data array from the response
-  //   //
-  //   data = data.data; 
-
-  //   for (const item of data)
-  //   {
-  //     const info = {
-  //       imageUrl: item.images.original.url,
-  //       imageHeight: item.images.original.height,
-  //       imageWidth: item.images.original.width,
-  //       gifTitle: item.title,
-  //     };
-
-  //     let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
-  //     // console.log("\nIs fav: ", isFav);
-  //     if (isFav.length)
-  //     {
-  //       info.id = isFav[0]._id;
-  //       info.checked = true;
-  //     }
-  //     else
-  //     {
-  //       info.id = null;
-  //       info.checked = false;
-  //     }
-  //     //console.log("Info: ", info);
-  //     RESULT.push(info);
-  //   }
-
-  //   // console.log("RESULT: ", RESULT);
-  //   res.render("index", {title: "Home", result: RESULT, username: username, favorites: null});
-  // })
-  // .catch( (e)=>{
-  //   console.log(e);
-  // });
   res.render("index", {title: "Home", username: username, favorites: null});
-});
-
-
-app.post("/", async (req, res) => {
-  const { title } = req.body;
-  let RESULT = [];
-
-  fetch("https://api.giphy.com/v1/gifs/search?api_key=Do2KvcrIdYyuEJWNE7dKQ7CNOdEYc7Wp&limit=5&q=" + title)
-  .then( async (r) => {
-    // awaiting the promise to be fulfilled, so I can get the full data from the server.
-    let data = await r.json();
-    // extracting the actual data array from the response
-    data = data.data; 
-    for (const item of data)
-    {
-      RESULT.push({
-        // id: item.id,
-        imageUrl: item.images.original.url,
-        imageHeight: item.images.original.height,
-        imageWidth: item.images.original.width,
-        gifTitle: item.title
-      });
-    }
-    res.render("index", {title: "Home", result: RESULT, username: req.session.username, favorites: null});
-  })
-  .catch( (e)=>{
-    console.log(e);
-  });
 });
 
 
@@ -146,22 +77,24 @@ app.get("/getSomething/:query", (req, res)=>{
       };
 
       // checking if the current item is part of the users favorites
-      let isFav = await FavoriteModel.find({title: info.gifTitle, width: info.imageWidth, height: info.imageHeight, user_id: user_id});
+      let isFav = await FavoriteModel.find({title: info.title, width: info.width, height: info.height, user_id: user_id});
       // if the item was found, then mark as checked (on web, will show hearted), set the info's id to be the current item's id found
       if (isFav.length)
       {
-        info.id = isFav[0]._id;
+        info._id = isFav[0]._id;
         info.checked = true;
       }
       else
       {
-        info.id = null;
+        info._id = null;
         info.checked = false;
       }
 
       // push onto the result array (the current info object, which contains all the information)
       RESULT.push(info);
     }
+
+    console.log(RESULT);
 
     res.send(JSON.stringify({result: RESULT}));
   })
@@ -208,14 +141,14 @@ app.post("/signup", (req, res) => {
   const { username, password, confirmation } = req.body;
   if (password != confirmation)
   {
-    res.send("Error...The password and confirmation did not match");
+    res.render("error", {message: "The password and confirmation did not match."});
   }
   // check if the username does not exist in the prorgam
   UserModel.findOne({username: username})
   .then( (r)=>{
     if (r)
     {
-      res.send("Error.... That username already exist.. Try again please.");
+      res.render("error", {message: "That username already exist..."});
     }
     else
     {
@@ -245,41 +178,74 @@ app.get("/signout", (req, res)=>{
   res.redirect("/");
 });
 
+let favorites = [];
+
 app.get("/favorite", (req, res)=>{
   // return an array of objects which contain releveant information 
-  FavoriteModel.find({user_id: req.session.user_id})
-  .then((r)=>{
-    res.render("index", {title: "Favorites", result: null, username: req.session.username, favorites: r});
-  })
-  .catch(e=>console.log("errrrrrror"));
+  if (req.session.user_id)
+  {
+    FavoriteModel.find({user_id: req.session.user_id})
+    .then((r)=>{
+      favorites = r;
+      res.render("index", {title: "Favorites", result: null, username: req.session.username, favorites: r});
+    })
+    .catch(e=>console.log("errrrrrror"));
+  }
+  else
+  {
+    res.render("error", {message: "You're not supposed to be here..."});
+  }
 });
+
 
 app.post("/favorite", (req, res)=>{
   const { url, title, width, height } = req.body;
   // save to the favorites
-  if (url && title && width && height)
-  {
-    const tempFav = new FavoriteModel({ 
-      user_id: req.session.user_id,
-      title: title,
-      url: url,
-      width: width,
-      height: height,
-    });
-    // saving tothe Favorites collection
-    tempFav.save();
+  // make sure that a title and url of this kind is not already available for the user
+  // for now we are assuming that the title and width and height are the identifiers for a gif, though many identifiers can be used, such as url, id, and more.
+  let exist = false;
+  FavoriteModel.find({title: title, width: width, height: height})
+  .then( (r)=>{
+    if (r.length)
+    {
+      exist = true;
+    }
 
-    res.status(200);
+    // if the todo is not in our favorites, and valid values where given.
+    if (url && title && width && height && req.session.user_id && !exist)
+    {
+      // create item from model
+      const tempFav = new FavoriteModel({ 
+        user_id: req.session.user_id,
+        title: title,
+        url: url,
+        width: width,
+        height: height,
+      });
+      // saving tothe Favorites collection
+      tempFav.save();
+    }
+  }).catch(e=>console.log("error", e));
+
+  });
+
+app.get("/getFavorites", (req, res)=>{
+  if (favorites)
+  {
+    // assuming that the user did not try to hack around this, by default the favorite path is going to run, which fills this favorites array for us.
+    // get all the favorites, and return them back in an array for the user to loop over
+    res.send(JSON.stringify(favorites));
   }
   else
   {
-    res.status(409);
+    res.render("error", {message: "Hmmm... Something went wrong with loading your favorites :/"});
   }
 });
 
 app.post("/removeFavorite", (req, res)=>{
   const { gif_id } = req.body;
   // find the gif_id in the database
+  console.log("Gif id: ", gif_id);
   try
   {
     FavoriteModel.deleteMany({_id: gif_id, user_id: req.session.user_id})
@@ -288,6 +254,7 @@ app.post("/removeFavorite", (req, res)=>{
       {
         console.log("Error, did not find that.");
       }
+      res.send(JSON.stringify({success: true}));
     })
     .catch(e=>console.error(e));
   }catch(e){

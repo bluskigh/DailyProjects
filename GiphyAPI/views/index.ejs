@@ -9,41 +9,37 @@
                             <img src="<%=section.url%>" alt="" style="height=<%=section.height%> width=<%=section.width%>%>">
                             <section class="information" style="height: <%=section.height%>; width:<%=section.width%>">
                                 <h4><%=section.title%></h4>
-                                <button class="liked" name=<%=section._id%> onclick="like(this)"><3</button>
+                                <button class="liked" name=<%=section._id%>><3</button>
                             </section>
                         </div>
                     <% } %>
                 </section>
             <% } else { %>
-                <h1>Giphy Daily Project.</h1>
-                <input type="text" name="title" placeholder="Type here..." required>
-                <button type="submit">Search</button>
+                <main>
+                    <h1>Giphy Daily Project.</h1>
+                    <input type="text" name="title" placeholder="Type here..." required>
+                    <button type="submit">Search</button>
 
-                <!-- gifs are going to go here -->
-                <section id="result">
-                    <%  if (result) { %>
-                        <% for (const section of result) { %>
-                            <div class="indiv">
-                                <img src="<%=section.imageUrl%>" alt="" style="height=<%=section.imageHeight%> width=<%=section.imageWidth%>%>">
-                                <section class="information" style="height: <%=section.imageHeight%>; width:<%=section.imageWidth%>">
-                                    <h4><%=section.gifTitle%></h4>
-                                    <button class="<%=section.checked ? 'liked' : '' %>" name="<%=section.id%>" onclick="like(this)"><3</button>
-                                </section>
-                            </div>
-                        <% } %>
-                    <%  } else { %>
-                        <!-- <h3>Nothing is being showed......</h3> -->
-                    <%  } %>
-                </section>
+                    <!-- gifs are going to go here -->
+                    <section id="result">
+                        <section class="column"></section>
+                        <section class="column"></section>
+                        <section class="column"></section>
+                    </section>
+                </main>
             <% } %>
         </main>
 
         <script>
 
+            let last = 0;
+            let newGifs = [];
+
             ////////// containers
-            const resultContainer = document.querySelector("#result");
             const favoriteContainer = document.querySelector("#favoriteContainer");
-            const individuals = document.querySelectorAll(".indiv");
+            const sections = document.querySelectorAll(".column");
+
+            let individuals = null;
 
             //////////// Query form
             const query = document.querySelector("input[type=text]");
@@ -51,21 +47,87 @@
             if (query)
             {
                 queryButton.addEventListener("click", function(){
-                    console.log(query.value);
+                    // todo remove the child nodes the the columns
+                    getGifs(false);
                 });
             }
 
-            for (const indiv of individuals)
+            function updateInvidiuals()
             {
-                indiv.addEventListener("mouseenter", function(){
-                    this.children[1].style.visibility = "visible";
-                });
-                indiv.addEventListener("mouseleave", function(){
-                    this.children[1].style.visibility = "hidden";
+                // reset all the other inviduals 
+
+                for (const gif of newGifs)
+                {
+                    gif.addEventListener("mouseenter", function(){
+                        this.children[1].classList.toggle("informationHovered");
+                        this.children[1].style.visibility = "visible";
+                        this.children[0].classList.toggle("blurImage");
+                    });
+                    gif.addEventListener("mouseleave", function(){
+                        this.children[1].classList.toggle("informationHovered");
+                        this.children[1].style.visibility = "hidden";
+                        this.children[0].classList.toggle("blurImage");
+                    });
+
+                }
+
+                // if I continue to update all the indiv, then its going to have some overwritting problem, where it overlaps eventListeners,
+                // and keeps piling them up one another.
+                newGifs = [];
+            }
+
+            function addButtonFunctionality(button, current)
+            {
+                button.addEventListener("click", function(){
+                    // if the button is liked currently, remove it from the database, and webpage
+                    if (this.classList.contains("liked"))
+                    {
+                        console.log(current._id);
+                        fetch("/removeFavorite", {
+                            method: "POST",
+                            headers: new Headers({
+                                "content-type": "application/json"
+                            }),
+                            body: JSON.stringify({
+                                // gif_id, is the id in the database, helps identify what to remove from the database 
+                                gif_id: current._id
+                            })
+                        })
+                        .then((r)=>r.json())
+                        .then((r)=>{
+                            if (r.success)
+                            {
+                                // uncomment this line to remove the favorite gif from favorites.
+                                // favoriteContainer.removeChild(this.parentElement.parentElement);
+                            }
+                            else
+                            {
+                                alert("Was not able to remove your favorite");
+                            }
+                        })
+                        .catch(e=>console.log("Error"));
+                    }
+                    else
+                    {
+                        // adding to our favorites
+                        fetch("/favorite", {
+                            method: "POST",
+                            headers: new Headers({
+                                "content-type": "application/json"
+                            }),
+                            body: JSON.stringify(current)
+                        })
+                        .then((r)=>{
+                            console.log("this ran");
+                            // could not complete this transaction
+                        })
+                        .catch(e=>console.log("Error..."))
+                    }
+                    this.classList.toggle("liked");
                 });
             }
 
-            const sections = document.querySelectorAll(".column");
+
             // for trending, put trending past the / mark 
             function getGifs(trending)
             {
@@ -88,21 +150,24 @@
                     {
                         // stores the current gif
                         const current = array[gif];
-                        console.log(current);
 
                         //// container div
                         const div = document.createElement("div");
                         div.classList.add("indiv");
+                        div.style.height = current.height;
+                        div.style.width =  "100%";
+
                         ////// image
                         const image = document.createElement("img");
                         image.src = current.url;
-                        image.style.height = current.height;
-                        image.style.width = current.width;
+                        image.style.height = "100%";
+                        image.style.width = "100%";
+
                         ////// section .information 
                         const sectionInformation = document.createElement("section");
                         sectionInformation.classList.add("information");
                         sectionInformation.style.height = current.height;
-                        sectionInformation.style.width = current.width;
+
                         ////// section h4
                         const h4 = document.createElement("h4");
                         h4.innerText = current.title;
@@ -111,68 +176,58 @@
                         button.innerText = "<3";
                         button.name = current.id;
 
+                        div.appendChild(image);
+                        sectionInformation.appendChild(h4);
+                        sectionInformation.appendChild(button);
+                        div.appendChild(sectionInformation);
+
                         if (current.checked)
                         {
                             button.classList.add("liked");
                         }
 
-                        button.addEventListener("click", function(){
-                            // if the button is liked currently, remove it from the database, and webpage
-                            if (this.classList.contains("liked"))
-                            {
-                                fetch("/removeFavorite", {
-                                    method: "POST",
-                                    headers: new Headers({
-                                        "content-type": "application/json"
-                                    }),
-                                    body: JSON.stringify({
-                                        // gif_id, is the id in the database, helps identify what to remove from the database 
-                                        gif_id: current.id
-                                    })
-                                })
-                                .then((r)=>{
-                                    // removing from the container, so it does not show on the screen, without reloading the page.
-                                    favoriteContainer.removeChild(this.parentElement.parentElement);
-                                })
-                                .catch(e=>console.log("Error"));
-                            }
-                            else
-                            {
-                                // not liked, make it liked
-                                obj.classList.toggle("liked");
+                        // adding the button functionality
+                        addButtonFunctionality(button, current);
 
-                                // adding to our favorites
-                                fetch("/favorite", {
-                                    method: "POST",
-                                    headers: new Headers({
-                                        "content-type": "application/json"
-                                    }),
-                                    body: JSON.stringify(current)
-                                })
-                                .then((r)=>{
-                                    console.log(r.status);
-                                    // could not complete this transaction
-                                    if (r.status == 409)
-                                    {
-                                        console.error("Could not add to favorites");
-                                    }
-                                    else
-                                    {
-                                        console.log("Added to the favorites.");
-                                    }
-                                })
-                                .catch(e=>console.log("Error..."))
-                            }
-                        });
+                        // adding the current gif (with all its elements) to the columns.
+                        sections[last%3].appendChild(div);
+                        newGifs.push(div);
+                        last += 1;
                     } // end of for
-                }).catch(e=>console.log("error", e));
+
+                    return r;
+                })
+                .then(r=>updateInvidiuals())
+                .catch(e=>console.log("error", e));
             }
 
             if (document.location.pathname === "/")
             {
                 getGifs(true);
             }
+            else if(document.location.pathname === "/favorite")
+            {
+                individuals = document.querySelectorAll(".indiv");
+                // get information from fravorites 
+                // loop through the information, and set each to have a event listener
 
+                fetch("/getFavorites")
+                .then( (r)=>r.json() )
+                .then( (r)=>{
+
+                    newGifs = individuals;
+
+                    updateInvidiuals();
+
+                    for (const gif in r)
+                    {
+                        const button = individuals[gif].children[1].children[1];
+                        console.log(button);
+                        addButtonFunctionality(button, r[gif]);
+                    }
+                })
+                .catch(e=>console.error(e));
+            }
         </script>
     </body> 
 </html>

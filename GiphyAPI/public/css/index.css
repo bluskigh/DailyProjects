@@ -3,6 +3,8 @@ body
   margin: 0;
   padding: 0;
   font-size: 20px;
+  background: rgb(34, 33, 33);
+  color: white;
 }
 
 header
@@ -32,7 +34,7 @@ header nav ul li a
 {
   padding: 0 .5em;
   text-decoration: none;
-  color: black;
+  color: white;
   transition: 1s ease;
 }
 header nav ul li a:hover
@@ -43,22 +45,11 @@ header nav ul li a:hover
 
 main
 {
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 100%;
   justify-content: center;
-  text-align: center;
-  width: 90%;
-}
-
-main #result
-{
-  display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
 }
 
 .indiv
@@ -68,17 +59,20 @@ main #result
   justify-content: center;
   align-items: center;
   flex-basis: auto;
+  transition: .5s ease;
+}
+.indiv:hover
+{
+  filter: grayscale(100%);
 }
 
-.cover
+.indiv img
 {
-  position: absolute;
-  background: black;
-  transition: 1s ease;
+  transition: .5s ease;
 }
-.cover:hover
+.blurImage
 {
-  background: transparent;
+  filter: blur(10px);
 }
 
 h4
@@ -107,15 +101,15 @@ button
   background: transparent;
   transition: .8s ease;
 }
-.information:hover
+.informationHovered
 {
   opacity: 100%;
-  color: rgb(255, 255, 255);
-  visibility: visible;
-  background: black;
-  text-shadow: 0em 0em 2em white;
-  box-shadow: inset 0em 0em 10em white;
+  color:rgb(255, 255, 255);
+  text-shadow: 0em 0em .5em black;
 }
+/* .information:hover
+{
+} */
 
 .information button
 {
@@ -145,7 +139,31 @@ button
 
 .information .liked
 {
-  background-color: red;
-  border: 1px solid white;
-  color: white;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+}
+
+#result
+{
+  height: fit-content;
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.column
+{
+  margin: .5em;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.column div
+{
+  margin: .5em;
 }
