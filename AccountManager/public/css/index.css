@@ -1,0 +1,237 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+    font-family: "Roboto", sans-serif;
+}
+
+/* ------------------- Layouts */
+section, main
+{
+    margin: 0 auto;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+li, a
+{
+    transition: .7s ease;
+}
+footer
+{
+    width: 100%;
+}
+h1
+{
+    font-size: 3em;
+}
+h2
+{
+    font-size: 2.3em;
+    margin-bottom: .3em;
+}
+ul
+{
+    /* ul have this weird settings to them, margin on the left and padding */
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* centering the lis */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+ul li 
+{
+    /* removing the dots on the lis */
+    list-style-type: none;
+    margin: 0 1em;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+ul li a
+{
+    font-size: 1.1em;
+    color: white;
+    text-decoration: none;
+}
+
+/* -------------- NAVIGATION BAR*/
+nav
+{
+    padding: 2em 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* main sections */
+main
+{
+    padding: 2em 0;
+    color: white;
+}
+main h1
+{
+    margin: 0;
+}
+main p 
+{
+    margin-bottom: 0;
+}
+main img
+{
+    height: 350px;
+}
+
+section
+{
+    align-items: flex-start;
+}
+section hr
+{
+    width: 10%;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+section div
+{
+    width: 100%;
+}
+section div ul
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+section div ul li
+{
+    padding: .5em 0 .5em 0;
+}
+
+aside
+{
+    width: 100%;
+    text-align: center;
+}
+
+
+/* hovers */
+li:hover
+{
+    color: #f68900;
+    text-shadow: 0em 0em 1em white;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+a:hover
+{
+    color: #00ffff;
+    text-shadow: 0em 0em 1em white;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/*-------------- TECH section */
+#tech div
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+#tech img
+{
+    height: 120px;
+    filter: grayscale(100%);
+    transition: .7s ease;
+}
+#tech div img:hover
+{
+    filter: grayscale(0%);
+}
+#tech #ejs
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+}
+#tech section
+{
+    margin: .5em 0;
+    position: relative;
+    /* to align the h4 in the section tag */
+    display: flex;
+    align-items: center;
+}
+
+.techNotHovered
+{
+    color: black;
+    position: absolute;
+    /* put the h4 at the bottom of the image */
+    top: 100;
+    opacity: 0%;
+    transition: .5s ease;
+}
+
+/* 50 makes it go tot he top */
+.techHovered
+{
+    text-shadow: 0em 0em 1em white;
+    color: #f68900;
+    opacity: 100%;
+    top: -50;
+}
+
+/* -----------Follow me under the logo section */
+#github
+{
+    height: 50%;
+    background: white;
+    border-radius: 50%;
+}
+#github img
+{
+    height: 50;
+}
+
+/* -----------Footer */
+#footer
+{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#footerContainer
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.footerIndiv
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#socials
+{
+    text-align: center;
+}
+.footerIndiv img
+{
+    filter: grayscale(100%);
+    margin: 0 1em;
+    height: 50;
+}
