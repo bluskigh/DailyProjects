@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
 // connect to the local database
 mongoose.connect("mongodb://localhost:27017/accountManagerApp", {useUnifiedTopology: true, useNewUrlParser: true} )
 .then((r)=>{
@@ -25,7 +27,17 @@ const UserSchema = new mongoose.Schema({
 const UserModel = new mongoose.model("Users", UserSchema);
 
 module.exports.model = UserModel;
-// TODO: add auth's here
-// TODO: DOING: sign up functionality
-// TODO: add login functionality
-
+module.exports.createUser = (username, password)=>{
+  return new Promise(async (resolve, reject)=>{
+    // hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    // create the user
+    const temp = new UserModel({username: username, password: hash});
+    // save new user to the database
+    temp.save();
+    console.log(temp);
+    // return id to the user
+    resolve(temp._id);
+  });
+};

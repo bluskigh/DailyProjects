@@ -1,30 +1,31 @@
 const express = require("express");
 const session = require("express-session");
+const ManagerError = require("./ManagerError");
 const userModel = require("./UserModel");
 const router = express.Router();
 
 //middleware
+router.use(express.urlencoded());
 router.use(express.json()); // for body
 router.use(session({
   // TODO: figure out how to use env variable instead.
   secret: "makebettersecret"
 }));
 
-router.get("/signup", (req, res)=>{
-  res.render("signup");
-});
-// TODO: provide specific and correct status codes
-router.post("/signup", async (req, res, next)=>{
+const verifySignUp = async (req, res, next)=>{
   const {username, password, confirmation} = req.body;
   // username not provided
   if (!username)
-    throw new ManagerError("Did not provide userame", 404); 
+  {
+    console.error("The username was not given");
+    next(new ManagerError("Did not provide userame", 404, "/signUp"));
+  }
   if (!password)
-    throw new ManagerError("Did not provide password", 404); 
+    next(new ManagerError("Did not provide password", 404, "/signUp")); 
   if (password != confirmation)
-    throw new ManagerError("Password and confirmation do not match.", 404); 
+    next(new ManagerError("Password and confirmation do not match.", 404, "/signUp")); 
   
-  const id = await userModel.model.exist({username: username});
+  const id = await userModel.model.exists({username: username});
   console.log("The id of the user is: ", id);
   if (id)
   {
@@ -32,15 +33,29 @@ router.post("/signup", async (req, res, next)=>{
   }
   else
   {
-    // log the user in now.
-    req.session.user_id = id;
-    // home page (logged in.... diff than home of not logged in which shows my information and about the application)
-    res.redirect("/home");
+    try{
+      const id = await userModel.createUser(username, password);
+      // log the user in now.
+      req.session.user_id = id;
+      return next();
+    }catch(e){
+      // throw the error to the error route handler
+      return next(e);
+    }
   }
+};
+
+router.get("/signup", (req, res)=>{
+  res.render("signup", {styleLocation: "css/signup.css", title: "Sign Up", signUp: true, logIn: false, home: false});
+});
+// TODO: provide specific and correct status codes
+router.post("/signup", verifySignUp, (req, res)=>{
+  // home page diff from /
+  res.redirect("/home");
 });
 
 router.get("/login", (req, res)=>{
-  res.render("login");
+  res.render("login", {styleLocation: "css/login.css", title: "Log In", signUp: false, logIn: true, home: false});
 });
 router.post("/login", (req, res)=>{
   res.send("Have nto implemented this yet");
@@ -56,9 +71,9 @@ router.get("/signout", (req, res)=>{
 
 ////// Error handler
 router.use((err, req, res, next)=>{
-  const { message="Error", status=404 } = err;
+  const { message="Error", status=404, leftOff="/" } = err;
   // taking to error page, show this error well. 
-  res.render("error", {message, status});
+  res.render("error", {message, status, leftOff});
 });
 
 module.exports = router;

@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error!</title>
+    <style>
+        body
+        {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+        }
+        h1
+        {
+            font-size: 5em;
+            margin: 0;
+        }
+        p
+        {
+            color: red;
+            font-size: 1.5em;
+        }
+        a
+        {
+            padding: .3em 1em;
+            color: white;
+            border-radius: .8em;
+            background-color: red;
+            transition: .5s ease;
+        }
+        a:hover
+        {
+            color: red;
+            background: white;
+            box-shadow: red;
+            transform: translateY(-10);
+        }
+        .hidden
+        {
+            visibility: hidden;
+        }
+        main
+        {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Error!</h1>
+        <p><%=message%></p>
+        <a href="<%=leftOff%>">Go Back</a>
+    </main>
+    <script>
+        const header = document.querySelector("h1");
+        const blink = ()=>{
+            setTimeout(()=>{
+                header.classList.toggle("hidden");
+                blink();
+            }, 500);
+        };
+        // init the blinking
+        blink();
+    </script>
+</body>
+</html>

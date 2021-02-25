@@ -1,8 +1,8 @@
 const techImages = document.querySelectorAll("#tech section");
-console.log(techImages);
 // go over and add eventlistener
 for (const image of techImages)
 {
+    ////////// For animation of hovering over the technologies images
     const children = image.children;
     if (children.length >= 2)
     {

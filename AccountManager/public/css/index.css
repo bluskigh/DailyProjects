@@ -5,71 +5,12 @@ body
     background-color: black;
     color: white;
     font-family: "Roboto", sans-serif;
+    /* SIDE COLORS */
+    /* color: #00ffff;
+    color: #f68900; */
 }
 
 /* ------------------- Layouts */
-section, main
-{
-    margin: 0 auto;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-li, a
-{
-    transition: .7s ease;
-}
-footer
-{
-    width: 100%;
-}
-h1
-{
-    font-size: 3em;
-}
-h2
-{
-    font-size: 2.3em;
-    margin-bottom: .3em;
-}
-ul
-{
-    /* ul have this weird settings to them, margin on the left and padding */
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    /* centering the lis */
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-ul li 
-{
-    /* removing the dots on the lis */
-    list-style-type: none;
-    margin: 0 1em;
-    font-family: 'Times New Roman', Times, serif;
-}
-
-ul li a
-{
-    font-size: 1.1em;
-    color: white;
-    text-decoration: none;
-}
-
-/* -------------- NAVIGATION BAR*/
-nav
-{
-    padding: 2em 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /* main sections */
 main
 {

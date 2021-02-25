@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="<%=styleLocation%>">
+
+    <title><%=title%></title>
+</head>
+<body>
+    <% if (!home) { %>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <!-- TDDO learn how to move the page down to a ceratin location using js -->
+                <% if (!signUp) { %>
+                    <li><a href="/signup">Sign Up</a></li>
+                <% } %>
+                <% if (!logIn) { %>
+                    <li><a href="/login">Log In</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    <% } else { %>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/accounts">Accounts</a></li>
+                <li><a href="/options">Options</a></li>
+                <li><a href="/signout">Sign Out</a></li>
+            </ul>
+        </nav>
+    <% } %>
