@@ -74,13 +74,6 @@ li:hover
     cursor: pointer;
 }
 
-a:hover
-{
-    color: #00ffff;
-    text-shadow: 0em 0em 1em white;
-    text-decoration: underline;
-    cursor: pointer;
-}
 
 /*-------------- TECH section */
 #tech div

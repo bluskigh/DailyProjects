@@ -41,3 +41,37 @@ module.exports.createUser = (username, password)=>{
     resolve(temp._id);
   });
 };
+module.exports.login = (username, password)=>{
+  return new Promise((resolve, reject)=>{
+    UserModel.findOne({username})
+    .then(async (r)=>{
+      if (r)
+      {
+        // get the password
+        const hashed = r.password;
+        try{
+          // compare the password given with the hashed one in the database 
+          const result = await bcrypt.compare(password, hashed);
+          console.log("Result: ", result);
+          if (result)
+          {
+            // the password was correct, return id, to keep the user logged in.
+            resolve(r._id);
+          }
+          else
+          {
+            // the pasword was incorrect
+            reject({message: "Incorrect password", status: 404});
+          }
+        }catch(e){
+          // if some error occured int he bcyrpt compare, this will run
+          reject(e);
+        }
+      }
+      else
+      {
+        reject({message: "Could not find user with \"" + username + "\" in our database", status: 404}); 
+      }
+    })
+  });
+};

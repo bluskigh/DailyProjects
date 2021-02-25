@@ -9,7 +9,7 @@ body
 section, main
 {
     margin: 0 auto;
-    width: 50%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,6 +17,7 @@ section, main
 }
 li, a
 {
+    color: gray;
     transition: .7s ease;
 }
 footer
@@ -54,7 +55,7 @@ ul li
 ul li a
 {
     font-size: 1.1em;
-    color: white;
+    color: gray;
     text-decoration: none;
 }
 
@@ -96,4 +97,11 @@ input:focus
 {
     box-shadow: 0em 0em 1em orange;
     outline: none;
+}
+a:hover
+{
+    color: #00ffff;
+    text-shadow: 0em 0em 1em white;
+    text-decoration: underline;
+    cursor: pointer;
 }

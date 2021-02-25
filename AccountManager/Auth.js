@@ -45,8 +45,39 @@ const verifySignUp = async (req, res, next)=>{
   }
 };
 
+const verifyLogIn = (req, res, next)=>{
+  const { username, password } = req.body;
+  if (!username)
+    next(new ManagerError("You did not provide a username", 404, "/login")); 
+  if (!password)
+    next(new ManagerError("You did not provide a password", 404, "/login")); 
+
+  userModel.login(username, password)
+  .then((r)=>{
+    // everything went well, log the user in
+    req.session.user_id = r;
+    next();
+  })
+  .catch((e)=>{
+    // if anything went wrong with login method from the userModel, show in the error handler
+    const { message="Could not log you in", status=404 } = e;
+    return next(new ManagerError(message, status, "/login"));
+  });
+  // check if username even exists 
+  // if not, throw an error saying that username is not in our database
+  // if it does, then attempt sign in.
+};
+
+
 router.get("/signup", (req, res)=>{
-  res.render("signup", {styleLocation: "css/signup.css", title: "Sign Up", signUp: true, logIn: false, home: false});
+  if (req.session.user_id)
+  {
+    res.redirect("/");
+  }
+  else
+  {
+    res.render("signupORlogin", {styleLocation: "css/signup.css", title: "Sign Up", signUp: true, logIn: false, home: false});
+  }
 });
 // TODO: provide specific and correct status codes
 router.post("/signup", verifySignUp, (req, res)=>{
@@ -55,22 +86,34 @@ router.post("/signup", verifySignUp, (req, res)=>{
 });
 
 router.get("/login", (req, res)=>{
-  res.render("login", {styleLocation: "css/login.css", title: "Log In", signUp: false, logIn: true, home: false});
+  if (req.session.user_id)
+  {
+    res.redirect("/");
+  }
+  else
+  {
+    res.render("signupORlogin", {styleLocation: "css/signup.css", title: "Log In", signUp: false, logIn: true, home: false});
+  }
 });
-router.post("/login", (req, res)=>{
-  res.send("Have nto implemented this yet");
+
+router.post("/login", verifyLogIn, (req, res)=>{
+  res.redirect("/home");
 });
 
 router.get("/signout", (req, res)=>{
-  // clearing the session (id);
-  req.session.destroy();
-  // redirect to the home page, given options to sign up or log in
+  if (req.session.user_id)
+  {
+    // clearing the session (id);
+    req.session.destroy();
+    // redirect to the home page, given options to sign up or log in
+  }
   res.redirect("/");
 });
 
 
 ////// Error handler
 router.use((err, req, res, next)=>{
+  console.error(err);
   const { message="Error", status=404, leftOff="/" } = err;
   // taking to error page, show this error well. 
   res.render("error", {message, status, leftOff});
