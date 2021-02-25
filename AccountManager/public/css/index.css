@@ -196,7 +196,7 @@ a:hover
 /* -----------Follow me under the logo section */
 #github
 {
-    height: 50%;
+    height: 50px;
     background: white;
     border-radius: 50%;
 }
@@ -234,4 +234,9 @@ a:hover
     filter: grayscale(100%);
     margin: 0 1em;
     height: 50;
+    transition: .5s ease;
+}
+.footerIndiv img:hover
+{
+    filter: grayscale(0%);
 }
