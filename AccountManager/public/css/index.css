@@ -3,6 +3,7 @@ body
     margin: 0;
     padding: 0;
     background-color: black;
+    height: 100vh;
     color: white;
     font-family: "Roboto", sans-serif;
     /* SIDE COLORS */
@@ -151,6 +152,7 @@ li:hover
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 2em;
 }
 .footerIndiv
 {

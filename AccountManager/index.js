@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const Auth = require("./Auth");
+const Manager = require("./Manager");
 const session = require("express-session");
 const app = express();
 
@@ -10,12 +11,14 @@ app.set("view engine", "ejs");
 // middleware
 app.use(express.static(path.join(__dirname, "public")));
 app.use(Auth);
+app.use(Manager);
 app.use(session({secret: "makebettersecret"}));
 
 //////////////////////////// Not signed in routes
 app.get("/", (req, res)=>{
   if (req.session.user_id)
   {
+    console.log("Redirecting to home");
     res.redirect("/home");
   }
   else
@@ -24,16 +27,9 @@ app.get("/", (req, res)=>{
   }
 });
 
-//////////////////////////// Signed in routes 
-app.get("/home", (req, res)=>{
-  if (req.session.user_id)
-  {
-    res.render("home", {styleLocation: "css/home.css", title: "Home", signUp: false, logIn: false, home: true});
-  }
-  else
-  {
-    res.redirect("/");
-  }
+app.get("/signout", (req, res)=>{
+  req.session.destroy();
+  res.redirect("/");
 });
 
 //////////////////////////// Contact routes 

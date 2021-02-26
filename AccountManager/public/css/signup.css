@@ -1,6 +1,11 @@
+body
+{
+    background: black;
+    height: 100vh;
+}
 main
 {
-    height: 70vh;
+    height: 80vh;
     align-items: center;
     justify-content: center;
 }

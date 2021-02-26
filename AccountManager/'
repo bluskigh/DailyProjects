@@ -72,25 +72,28 @@ const ChildModel = new mongoose.model("Childs", ChildSchema);
 const NoteModel = new mongoose.model("Notes", NoteSchema);
 const UserModel = new mongoose.model("Users", UserSchema);
 
-const hash = (password)=>{
-  return new Promise(async (resolve, reject)=>{
+const getHashed = async (password) => {
     // hash the password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     // create the user
-    resolve(hash);
-  });
+    return new Promise((resolve, reject)=>{
+      resolve(hash);
+    });
 };
 
-const create = (Model, username, password)=>{
+const create = (user, username, password)=>{
   return new Promise(async (resolve, reject)=>{
-    hash(password)
+    getHash(password)
     .then((r)=>{
-      // create the user
-      const temp = new Model({username: username, password: hash});
+      let temp = null
+      if (user)
+      {
+      }
+      const temp = new Model({username: username, password: r});
       // save new user to the database
       temp.save();
-      console.log(temp._id);
+      console.log(temp);
       // return id to the user
       resolve(temp._id);
     })
@@ -106,31 +109,13 @@ module.exports.model = UserModel;
 // to create a (manager)
 module.exports.createUser = (username, password)=>{
   return new Promise(async (resolve, reject)=>{
-    hash(password)
-    .then((r)=>{
-      // result is the hashed password
-      const temp = new UserModel({username: username, password: hash});
-      temp.save();
-      resolve(temp._id);
-    })
-    .catch((e)=>{
-      reject(e);
-    })
+    resolve(await create(UserModel, username, password));
   });
 };
 // to create a child 
-module.exports.createChild = (username, password, parent_id)=>{
+module.exports.createChild = (username, password)=>{
   return new Promise(async (resolve, reject)=>{
-    hash(password)
-    .then((r)=>{
-      const temp = new ChildModel({username: username, password: hash, parent_id: parent_id});
-      temp.save();
-      console.log("Saved the child, ", temp._id); 
-      resolve(temp._id);
-    })
-    .catch((e)=>{
-      reject(e);
-    })
+    resolve(await create(ChildModel, username, password));
   });
 };
 

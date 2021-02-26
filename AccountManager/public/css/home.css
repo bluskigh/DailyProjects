@@ -1,4 +1,6 @@
 body
 {
-    color: blue;
+    background: black;
+    color: white;
+    height: 100vh;
 }
