@@ -1,0 +1,20 @@
+body
+{
+    margin: 0;
+    padding: 0;
+}
+
+.correct
+{
+    background: green;
+    color: white;
+}
+.incorrect
+{
+    background: red;
+    color: white;
+}
+.answered
+{
+    opacity: 76%;
+}
