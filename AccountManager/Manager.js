@@ -1,7 +1,10 @@
 const express = require("express");
 const session = require("express-session");
 const userModel = require("./UserModel");
+const path = require("path");
 const router = express.Router();
+
+router.use(express.static(path.join(__dirname, "public")));
 
 router.use(session({
   // TODO: figure out how to use env variable instead.
@@ -21,46 +24,19 @@ const verifyAction = (req, res, next)=>{
 
 const links = [
   {
-    where: "/create",
-    title: "Create Employee"
-  },
-  {
-    where: "/accounts",
-    title: "Show Accounts"
-  },
-  {
     where: "/signout",
     title: "Sign Out"
   }
 ];
 
 router.get("/home", verifyAction, (req, res)=>{
-  if (req.session.user_id)
-  {
-    res.render("home", {styleLocation: "css/home.css", title: "Home", links: links});
-  }
-  else
-  {
-    res.redirect("/");
-  }
-});
-
-router.get("/create", (req, res)=>{
-  const { username, password } = req.body;
-
-
-  userModel.createUser(username, password, req.session.user_id)
+  userModel.model.findOne({_id: req.session.user_id})
   .then((r)=>{
-
+    res.render("home", {styleLocation: "css/home.css", title: "Home", links: links, username: r.username});
   })
   .catch((e)=>{
     throw new e;
   })
-
-});
-
-router.get("/accounts", verifyAction, (req, res)=>{
-  res.send("Have not implemented this function yet");
 });
 
 module.exports = router;

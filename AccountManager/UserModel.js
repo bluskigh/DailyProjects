@@ -38,6 +38,10 @@ const ChildSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  position: {
+    type: String,
+    required: true
+  },
   rating: {
     type: Number,
     default: 10
