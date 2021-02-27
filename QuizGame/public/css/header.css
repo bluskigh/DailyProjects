@@ -1,0 +1,49 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: black;
+    color: white;
+}
+nav
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+nav ul
+{
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+nav ul li 
+{
+    list-style-type: none;
+}
+nav ul li a
+{
+    color: white;
+    text-decoration: none;
+    margin: 0em .5em;
+}
+
+/* main sections of the body */
+main
+{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+img 
+{
+    height: 300px;
+    width: 300px;
+}

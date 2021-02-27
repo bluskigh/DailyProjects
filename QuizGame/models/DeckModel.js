@@ -22,7 +22,7 @@ const CardSchema = new mongoose.Schema({
     type: Object,
     required: true
   },
-  title: String,
+  question: String,
   answer: String
 });
 
@@ -43,13 +43,14 @@ Once that is done:
 */
 
 module.exports.addDeck = (title, desc, userId)=>{
-  return new Promise((resolve, reject)=>{
-  // duplicates are allowed
-    DeckModel.insertOne({userId, title, desc})
-    .then((r)=>{
-      console.log("/////////////// Addded the deck ", title);
-      resolve(r._id);
-    }).catch((e)=>{reject(e)});
+  return new Promise(async (resolve, reject)=>{
+    try {
+      const temp = new DeckModel({userId, title, desc});
+      await temp.save();
+      resolve(temp._id);
+    } catch(e) {
+      reject(e);
+    }
   });
 };
 module.exports.deleteDeck = (id)=>{
@@ -70,6 +71,30 @@ module.exports.updateDeck = (newItem, isTitle)=>{
     }).catch((e)=>{reject(e)});
   });
 };
+module.exports.addCard = (deckID, question, answer)=>{
+  // make sure the deck exists
+  return new Promise(async (resolve, reject)=>{
+    const deckExists = await DeckModel.exists({_id: deckID})
+    if (deckExists) {
+      const temp = new CardModel({deckID, question, answer});
+      await temp.save();
+      resolve(temp_.id);
+    } else {
+      reject(new ApplicationError("You're trying to create a card in a deck that does not exist anymore", 404));
+    }
+  });
+};
+module.exports.findCards = (deckId)=>{
+  return new Promise(async (resolve, reject)=>{
+    try {
+      const data = await DeckModel.find({deckId});
+      resolve(data);
+    } catch(e) {
+      reject(e);
+    }
+  });
+};
+module.exports.model = DeckModel;
 
 // module.exports.updateDeckTitle = (newTitle, id)=>{
 //   return new Promise((resolve, reject)=>{

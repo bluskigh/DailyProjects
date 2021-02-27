@@ -1,0 +1,35 @@
+main
+{
+    height: 80%;
+    align-items: center;
+    justify-content: center;
+}
+form
+{
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+form input
+{
+    margin: .5em 0;
+    padding: .4em;
+    border-radius: .3em;
+}
+form input:focus
+{
+    box-shadow: 0em 0em 1em white;
+    border: 1px solid red;
+}
+form button
+{
+    padding: .4em;
+    border:none;
+    transition: .4s ease;
+}
+form button:hover
+{
+    cursor: pointer;
+    background: rgb(89, 89, 89);
+    color: white;
+}

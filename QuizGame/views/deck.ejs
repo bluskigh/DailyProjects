@@ -1,0 +1,38 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deck</title>
+</head>
+<body>
+    <main name="<%=id%>">
+        <form action="/addDeck" method="POST">
+            <input type="text" name="title" placeholder="<%=title%>" required>
+            <input type="text" name="desc" placeholder="<%=description%>">
+            <button type="submit">Create Deck</button>
+        </form>
+        <hr>
+        <h1>Cards</h1>
+        <section id="cards">
+
+        </section>
+        <form action="/addCard" id="add">
+            <input type="text" name="question" required>
+            <input type="text" name="answer" required>
+            <button type="submit">Add</button>
+        </form>
+    </main>
+    <a href="/">Go Home</a>
+
+    <script>
+        const form = document.querySelector("#add");
+        const main = document.querySelector("main");
+        const deckId = main.getAttribute("name"); 
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+            console.log(deckId);
+        });
+    </script>
+</body>
+</html>

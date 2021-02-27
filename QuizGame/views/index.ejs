@@ -1,24 +1,9 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/index.css">
-    <title>Phase 1</title>
-</head>
-<body>
-    <button id="start">Start Test</button>
-    <!-- test section -->
-    <section>
-        <button id="done">Done</button>
-    </section>
-    <p id="result"></p>
-
-    <% if (!user_id) { %>
-        <a href="/signup">Sign In</a>
-        <a href="/login">Log In</a>
-    <%} %>
-
+<%- include("partials/header") %>
+    <main>
+        <!-- home page -->
+        <h1>Quiz Game | Daily Project</h1>
+        <img src="images/logo.png" alt="">
+    </main>
     <script src="js/index.js"></script>
 </body>
 </html>

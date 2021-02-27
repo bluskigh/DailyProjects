@@ -1,12 +1,14 @@
 const express = require("express");
+const Authorization = require("./Routers/authorization");
 const ApplicationError = require("./secondary/ApplicationError");
 const DeckModel = require("./models/DeckModel");
-const UserModel = require("./models/UserModel");
 const session = require("express-session");
 const path = require("path");
 const app = express();
 
-app.use(session({secret: "secret"}));
+
+// Routers 
+app.use(Authorization);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -14,6 +16,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(session({secret: "secret"}));
 
 const isIn = (array, item)=>{
   for (const i of array)
@@ -49,11 +52,18 @@ const getChoices = (available, right)=>{
   // push the right randomly
   return wrongs;
 };
-app.get("/", (req, res)=>{
-  res.render("index", {user_id: req.session.user_id});
+
+const checkLoggedIn = (req, res, next)=>{
+  if (req.session.userId) {
+    res.render("home", {title: "Home", stylesheets: [], userId: req.session.userId});
+  }
+  return next();
+};
+app.get("/", checkLoggedIn, (req, res)=>{
+  res.render("index", {title: "Quiz Application", stylesheets:["index.css"], userId: req.session.userId});
 });
 
-app.get("/getQuestions", (req, res)=>{
+app.get("/getQuestions", checkLoggedIn, (req, res)=>{
   const available = ["The Sun", "21", "malloc(sizeof(int))", "points to a location in memory", "a bug in the actual system"];
   const questions = [
     {
@@ -70,47 +80,58 @@ app.get("/getQuestions", (req, res)=>{
   res.json(questions);
 });
 
-////// Sign up
-app.get("/signup", (req, res)=>{
-  res.render("authorization", {signUp: true, title: "Sign Up"});
+///// Decks
+app.get("/addDeck", (req, res)=>{
+  // TODO: add auth later, do not let people access this route unless they are signed in
+  res.render("deck");
 });
-app.post("/signup", (req, res)=>{
-  console.log(req.body);
-  console.log(req.params);
-  console.log(req.query);
-  const { username, password, confirmation } = req.body;
-  console.log(username, password, confirmation);
-  if (!password)
-    throw new ApplicationError("Did not provide password", 404, "/signup");
-  if (password != confirmation)
-    throw new ApplicationError("Confirmation does not match", 404, "/signup");
-  if (!username)
-    throw new ApplicationError("Username not provided", 404, "/signup");
+app.post("/addDeck", (req, res)=>{
+  const { title, desc } = req.body;
+  DeckModel.addDeck(title, desc, req.session.userId)
+  .then((r)=>{
+    // TODO when created, redirect the user to the page /user/deck/deck_id 
+    console.log("Added to the decks");
+    res.redirect("/");
+  })
+  .catch((e)=>{
+    throw e;
+  })
+});
 
-  UserModel.addUser(username, password)
+// expected to get via fetch.
+app.get("/showDecks", (req, res)=>{
+  // return back all the decks that belong to the current user.
+  DeckModel.model.find({userId: req.session.userId})
   .then((r)=>{
-    console.log(r);
-    req.session.user_id = r;
-    res.redirect("/");
+    // should return an array of objects which represent each deck.
+    res.json(r);
   })
   .catch((e)=>{
     throw e;
-  });
-});
-////// Login 
-app.get("/login", (req, res)=>{
-  res.render("authorization", {signUp: false, title: "Log In"});
-});
-app.post("/login", (req, res)=>{
-  const { username, password } = req.body;
-  UserModel.login(username, password)
-  .then((r)=>{
-    req.session.user_id = r;
-    res.redirect("/");
   })
-  .catch((e)=>{
-    throw e;
-  });
+});
+
+app.post("/:deckId/addCard", (req, res)=>{
+  const { deckId } = req.params;
+  res.json({added: true});
+});
+// show the decks
+app.get("/decks/:deckId", async (req, res)=>{
+  const { deckId } = req.params;
+  const deckInfo = await DeckModel.model.findOne({_id: deckId});
+  console.log(deckInfo);
+  if (deckInfo)
+  {
+    const cards = await DeckModel.findCards(deckId);
+    res.render("deck", {cards, id: deckId, title: deckInfo.title, description: deckInfo.desc});
+  }
+  else
+    throw new ApplicationError(e, 404);
+});
+
+
+app.get("*", (req, res)=>{
+  res.redirect("/");
 });
 
 // Error handler 
