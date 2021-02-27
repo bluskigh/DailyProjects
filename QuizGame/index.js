@@ -50,10 +50,7 @@ const getChoices = (available, right)=>{
   return wrongs;
 };
 app.get("/", (req, res)=>{
-  if (req.session.user_id)
-    res.send("You're signed in right now");
-  else
-    res.render("index");
+  res.render("index", {user_id: req.session.user_id});
 });
 
 app.get("/getQuestions", (req, res)=>{
@@ -85,7 +82,7 @@ app.post("/signup", (req, res)=>{
   console.log(username, password, confirmation);
   if (!password)
     throw new ApplicationError("Did not provide password", 404, "/signup");
-  if (password == confirmation)
+  if (password != confirmation)
     throw new ApplicationError("Confirmation does not match", 404, "/signup");
   if (!username)
     throw new ApplicationError("Username not provided", 404, "/signup");
@@ -103,6 +100,17 @@ app.post("/signup", (req, res)=>{
 ////// Login 
 app.get("/login", (req, res)=>{
   res.render("authorization", {signUp: false, title: "Log In"});
+});
+app.post("/login", (req, res)=>{
+  const { username, password } = req.body;
+  UserModel.login(username, password)
+  .then((r)=>{
+    req.session.user_id = r;
+    res.redirect("/");
+  })
+  .catch((e)=>{
+    throw e;
+  });
 });
 
 // Error handler 

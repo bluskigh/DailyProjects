@@ -46,10 +46,9 @@ module.exports.addUser = (username, password)=>{
         await temp.save();
         // return the newly created users id 
         resolve(temp._id);
-      }
-      else {
+      } else {
         // was not available, let the user know.
-        reject(new ApplicationError(username + " username is already taken", 404));
+        reject(new ApplicationError(username + " username is already taken", 404, "signup"));
       }
     } catch(e) {
       // reject any errors so our error handler can display.
@@ -68,3 +67,24 @@ module.exports.deleteUser = (id) => {
   });
 };
 // TODO: implemenet updating the user, for now it is not needed.
+module.exports.login = (username, password)=> {
+  return new Promise(async (resolve, reject)=>{
+    const isInDB = await UserModel.exists({username: username});
+    if (isInDB) {
+      // get the password, compare with given 
+      try {
+        const result = await UserModel.findOne({username});
+        const hashed = result.password;
+        const same = await bcrypt.compare(password, hashed);
+        if (same)
+          resolve(result._id);
+        else 
+          reject(new ApplicationError("Invalid password", 404, "/login"));
+      } catch(e) {
+        reject(e);
+      }
+    } else {
+      reject(new ApplicationError(username + " does not exist", 404, "/login"));
+    }
+  });
+};

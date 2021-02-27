@@ -14,6 +14,11 @@
     </section>
     <p id="result"></p>
 
+    <% if (!user_id) { %>
+        <a href="/signup">Sign In</a>
+        <a href="/login">Log In</a>
+    <%} %>
+
     <script src="js/index.js"></script>
 </body>
 </html>
