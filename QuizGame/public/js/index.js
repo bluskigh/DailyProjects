@@ -1,5 +1,6 @@
 const start = document.querySelector("#start");
 const done = document.querySelector("#done");
+const result = document.querySelector("#result");
 const total = 2; // 4 questions
 let correct = 0;
 let answered = 0;
@@ -8,12 +9,21 @@ start.addEventListener("click", function(){
     // make a fetch request to the server, get questions and andswers to each question back.
     // create dom elements
     // start the test
-    console.log("start button click");
+    // TODO: make this post, since we gogin to pass the current deck id, and user id.
+    fetch("/getQuestions")
+    .then(async (r)=> await r.json())
+    .then((r)=>{
+        // TOD : create container for the questions and answers.
+    })
+    .catch((e)=>{
+        console.error(e);
+    })
 });
 done.addEventListener("click", function(){
     if (answered == total)
     {
-        console.log("Final score: ", ((correct / total) * 100));
+        const finalScore = ((correct/total) * 100);
+        result.innerText = finalScore;
     }
     else
     {
