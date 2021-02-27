@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Replace this with a simple title of sign up or log in -->
+    <title><%=title%></title>
+</head>
+<body>
+    <% if (signUp) { %>
+    <form action="/signup" method="POST">
+    <% } else { %>
+    <form action="/login" method="POST">
+    <% } %>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <% if (signUp) { %>
+            <input type="password" name="confirmation" placeholder="Retype" required>
+        <% } %>
+        <button type="submit">Create</button>
+    </form>
+    <a href="/">Go Home</a>
+</body>
+</html>

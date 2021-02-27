@@ -1,10 +1,19 @@
 const express = require("express");
+const ApplicationError = require("./secondary/ApplicationError");
+const DeckModel = require("./models/DeckModel");
+const UserModel = require("./models/UserModel");
+const session = require("express-session");
 const path = require("path");
 const app = express();
 
+app.use(session({secret: "secret"}));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+//// Middleware
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+app.use(express.urlencoded());
 
 const isIn = (array, item)=>{
   for (const i of array)
@@ -41,7 +50,10 @@ const getChoices = (available, right)=>{
   return wrongs;
 };
 app.get("/", (req, res)=>{
-  res.render("index");
+  if (req.session.user_id)
+    res.send("You're signed in right now");
+  else
+    res.render("index");
 });
 
 app.get("/getQuestions", (req, res)=>{
@@ -50,15 +62,53 @@ app.get("/getQuestions", (req, res)=>{
     {
       title: "What is the name of our star?",
       answer: "The Sun",
-      wrong: getChoices(available, "The Sun")
+      choices: getChoices(available, "The Sun")
     },
     {
       title: "How do you allocate memory in C?",
       answer: "malloc(sizeof(int))",
-      wrong: getChoices(available, "malloc(sizeof(int))")
+      choices: getChoices(available, "malloc(sizeof(int))")
     }
   ];
   res.json(questions);
+});
+
+////// Sign up
+app.get("/signup", (req, res)=>{
+  res.render("authorization", {signUp: true, title: "Sign Up"});
+});
+app.post("/signup", (req, res)=>{
+  console.log(req.body);
+  console.log(req.params);
+  console.log(req.query);
+  const { username, password, confirmation } = req.body;
+  console.log(username, password, confirmation);
+  if (!password)
+    throw new ApplicationError("Did not provide password", 404, "/signup");
+  if (password == confirmation)
+    throw new ApplicationError("Confirmation does not match", 404, "/signup");
+  if (!username)
+    throw new ApplicationError("Username not provided", 404, "/signup");
+
+  UserModel.addUser(username, password)
+  .then((r)=>{
+    console.log(r);
+    req.session.user_id = r;
+    res.redirect("/");
+  })
+  .catch((e)=>{
+    throw e;
+  });
+});
+////// Login 
+app.get("/login", (req, res)=>{
+  res.render("authorization", {signUp: false, title: "Log In"});
+});
+
+// Error handler 
+app.use((err, req, res, next)=>{
+  const { message="error", status=404, before="/" } = err;
+  res.render("error", {message, status});
 });
 
 app.listen(3000, ()=>{console.log("listening on port 3000")});
