@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body
+        {
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: black;
+            box-shadow: inset 0em 0em 3em red;
+            transition: .5s ease;
+            color: white;
+        }
+        main
+        {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h4
+        {
+            color: red;
+        }
+        a
+        {
+            font-size: .8em;
+            border-radius: 1em;
+            padding: .5em 2em;
+            background-color: white;
+            color: red;
+            text-decoration: none;
+            transition: .5s ease;
+        }
+        a:hover
+        {
+            transform: translateY(-5px);
+            box-shadow: 0em .5em 2em red;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Status Code: <%=status%></h1>
+        <h4><%=message%></h4>
+        <a href="<%=where%>">Go Back</a>
+    </main>
+
+    <script>
+        const body = document.querySelector("body");
+        let isAlive = false;
+        const makeScary = ()=>{
+            setTimeout(()=>{
+                if (isAlive) {
+                    body.style.boxShadow = "inset 0em 0em 3em red";
+                } else {
+                    body.style.boxShadow = "inset 0em 0em 5em red";
+                }
+                isAlive = !isAlive;
+                makeScary();
+            }, 1000);
+        };
+        makeScary();
+    </script>
+</body>
+</html>

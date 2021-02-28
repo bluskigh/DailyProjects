@@ -37,19 +37,19 @@ const attemptLogIn = async (req, res, next)=>{
                 req.session.username = data.username;
                 return next();
             }
-            next(new ApplicationError("Failed to log you in", 404));
+            next(new ApplicationError("Failed to log you in", 404, "/login"));
         } catch(e) {
             return next(e);
         }
     } else {
-        return next(new ApplicationError("A user with thus username does not exist", 404)); 
+        return next(new ApplicationError("A user with thus username does not exist", 404, "/login")); 
     }
 };
 const attempSignUp = async (req, res, next)=>{
     const { username, password } = req.body;
     verifyAttempt(username, password);
     if (await UserModel.model.exists({username})) {
-        return next(new ApplicationError("A user with thus username already exists", 404)); 
+        return next(new ApplicationError("A user with thus username already exists", 404, "/signup")); 
     } else {
         try {
             const data = await UserModel.signUp(username, password)
@@ -66,7 +66,7 @@ const attempSignUp = async (req, res, next)=>{
 
 // Sign Up route handlers
 router.get("/signup", verifyLocation, (req, res)=>{
-    res.render("signup", {title: "Sign Up"});
+    res.render("form", {title: "Sign Up", action: "/signup", username: null, stylesheets:null});
 });
 router.post("/signup", attempSignUp, (req, res)=>{
     if (req.session.userId)
@@ -77,7 +77,7 @@ router.post("/signup", attempSignUp, (req, res)=>{
 
 // Log In route handlers
 router.get("/login", verifyLocation, (req, res)=>{
-    res.render("login", {title: "Log In"});
+    res.render("form", {title: "Log In", action: "/login", username: null, stylesheets:null});
 });
 router.post("/login", attemptLogIn, (req, res)=>{
     if (req.session.userId)
@@ -87,9 +87,5 @@ router.post("/login", attemptLogIn, (req, res)=>{
 });
 
 // PARENT (index.js) contains the error route handler
-router.use((err, req, res, next)=>{
-    const { message="Error", status=404 } = err;
-    res.send(err + ", " + status);
-});
 
 module.exports = router;

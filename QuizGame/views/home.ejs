@@ -1,2 +1,21 @@
 <%- include("partials/header") %>
-    <h1>You're currently signed in as: <%=username%></h1>
+        <h1>Tests</h1>
+        <section id="tests">
+            <% if (tests) { %>
+                <% for (const test of tests) { %>
+                    <div class="indiv">
+
+                    </div>
+                <% } %>
+            <% } else {%>
+                <h3>You do not have any tests.</h3>
+            <% } %>
+        </section>
+
+        <form action="/addTest">
+            <button>Add Test</button>
+        </form>
+    </main>
+
+</body>
+</html>

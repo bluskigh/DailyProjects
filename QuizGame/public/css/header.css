@@ -1,0 +1,83 @@
+body 
+{
+    margin: 0;
+    padding: 0;
+    background: #0C1446;
+    color: white;
+}
+
+nav
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+nav ul
+{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+li
+{
+    list-style-type: none;
+}
+a
+{
+    margin: 0 1em;
+    color: white;
+    text-decoration: none;
+    transition: .5s ease;
+}
+a:hover
+{
+    color: gray;
+}
+
+main
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+img
+{
+    margin: 0;
+    padding: 0;
+}
+.githubIcon
+{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    box-shadow: 0em 0em 1em white;
+}
+#logo
+{
+    height: 100px;
+}
+.other
+{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.other p 
+{
+    margin: 0;
+    margin-right: .5em;
+    padding: 0;
+}
+
+form
+{
+    display: flex;
+    flex-direction: column;
+}
+form input
+{
+    margin-bottom: .5em;
+}

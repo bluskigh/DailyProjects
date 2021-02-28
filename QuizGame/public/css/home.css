@@ -1,0 +1,18 @@
+nav
+{
+    justify-content: space-between;
+}
+
+#tests
+{
+    display: flex;
+    flex-direction: column;
+    /* TODO: in the furture, size the test based on how many question each one has. Layout them using the giphy layout */
+    justify-content: flex-start;
+    align-items: center;
+}
+form button
+{
+    padding: 1em 2em;
+    color: white;
+}

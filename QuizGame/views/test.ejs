@@ -1,0 +1,33 @@
+<%-include("partials/header")%>
+        <section>
+            <% if (creating) { %>
+                <form action="/createTest">
+                    <input type="text" name="title" placeholder="Test Title" required>
+                    <input type="text" name="desc" placeholder="Test Description" required>
+                    <!-- TODO: allow them add different options,load them here. -->
+                    <select name="subject" id="">
+                        <option value="math">Math</option>
+                        <option value="science">Science</option>
+                        <option value="computers">Computers</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </form>
+                <div id="questions">
+                    <!-- Default we are going to display one available already to edit -->
+                    <div class="question">
+                        <input type="text" name="question" placeholder="Question Here" required>
+                        <input type="text" name="answer" placeholder="Answer Here" required>
+                        <div class="questionOptions">
+                            <button class="delete">X</button>
+                            <!-- TODO: finish this move funcitonality -->
+                            <button class="move">|</button>
+                        </div>
+                    </div>
+                </div>
+            <% } else { %>
+                <h1>Loading test functionality not impleented yet....</h1>
+            <% } %>
+        </section>
+    </main>
+</body>
+</html>
