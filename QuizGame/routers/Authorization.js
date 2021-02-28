@@ -9,9 +9,10 @@ router.use(express.urlencoded());
 router.use(session({secret: "secret"}));
 
 const verifyLocation = (req, res, next)=>{
-    if (req.session.user_id)
+    if (req.session.userId) {
         // redirec to the home page
         res.redirect("/")
+    }
     else
         next();
 }
@@ -28,13 +29,38 @@ const verifyAttempt = (username, password)=>{
 const attemptLogIn = async (req, res, next)=>{
     const { username, password } = req.body;
     verifyAttempt(username, password);
-    try {
-        const id = await UserModel.logIn(username, password);
-        if (id)
-            return next();
-        next(new ApplicationError("Failed to log you in", 404));
-    } catch(e) {
-        next(e);
+    if (await UserModel.model.exists({username})) {
+        try {
+            const data = await UserModel.logIn(username, password);
+            if (data) {
+                req.session.userId = data.id;
+                req.session.username = data.username;
+                return next();
+            }
+            next(new ApplicationError("Failed to log you in", 404));
+        } catch(e) {
+            return next(e);
+        }
+    } else {
+        return next(new ApplicationError("A user with thus username does not exist", 404)); 
+    }
+};
+const attempSignUp = async (req, res, next)=>{
+    const { username, password } = req.body;
+    verifyAttempt(username, password);
+    if (await UserModel.model.exists({username})) {
+        return next(new ApplicationError("A user with thus username already exists", 404)); 
+    } else {
+        try {
+            const data = await UserModel.signUp(username, password)
+            if (data) {
+                req.session.userId = data.id;
+                req.session.username = data.username;
+                return next();
+            }
+        } catch(e) {
+            return next(e);
+        }
     }
 };
 
@@ -42,7 +68,11 @@ const attemptLogIn = async (req, res, next)=>{
 router.get("/signup", verifyLocation, (req, res)=>{
     res.render("signup", {title: "Sign Up"});
 });
-router.post("/signup", (req, res)=>{
+router.post("/signup", attempSignUp, (req, res)=>{
+    if (req.session.userId)
+        res.redirect("/");
+    else
+        res.send("You have not been signed up");
 });
 
 // Log In route handlers
@@ -50,9 +80,16 @@ router.get("/login", verifyLocation, (req, res)=>{
     res.render("login", {title: "Log In"});
 });
 router.post("/login", attemptLogIn, (req, res)=>{
-    res.send("You have been \"logged\" in");
+    if (req.session.userId)
+        res.redirect("/");
+    else
+        res.send("you have not been loggin in");
 });
 
 // PARENT (index.js) contains the error route handler
+router.use((err, req, res, next)=>{
+    const { message="Error", status=404 } = err;
+    res.send(err + ", " + status);
+});
 
 module.exports = router;

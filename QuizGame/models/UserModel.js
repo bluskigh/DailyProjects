@@ -17,7 +17,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         minLength: 1,
-        maxLength: 25,
         lower: true,
         required: true
     }
@@ -37,15 +36,17 @@ function encrypt(password) {
     });
 }
     
-
 // Custom actions
-module.exports.addUser = (username, password)=>{
+/*
+ * Before running, make sure to run model.exists()!
+ */
+module.exports.signUp = (username, password)=>{
     return new Promise(async (resolve, reject)=>{
         try {
             password = await encrypt(password);
             const temp = new UserModel({username, password});
             await temp.save();
-            resolve(temp._id);
+            resolve({username, id: temp._id});
         } catch(e) {
             reject(e);
         }
@@ -62,7 +63,7 @@ module.exports.logIn = (username, password)=>{
             if (tempModel) {
                 const successful = await bcrypt.compare(password, tempModel.password);
                 if (successful)
-                    resolve(tempModel._id);
+                    resolve({username, id: tempModel._id});
                 else
                     // TODO: check if you can replace with reject(false)
                     resolve(false);
@@ -75,6 +76,5 @@ module.exports.logIn = (username, password)=>{
         }
     });
 };
-
 // For general actions on the model, such as find({}), exists({})
 module.exports.model = UserModel;

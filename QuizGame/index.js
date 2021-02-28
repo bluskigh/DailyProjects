@@ -12,7 +12,10 @@ app.use(AuthorizationRouter);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res)=>{
-	res.render("index", {title: "Home"});
+    if (req.session.userId)
+        res.render("home", {title: "Home", username: req.session.username});
+    else
+        res.render("index", {title: "Home"});
 });
 
 // Error route handler
