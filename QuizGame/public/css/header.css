@@ -81,3 +81,7 @@ form input
 {
     margin-bottom: .5em;
 }
+button:hover
+{
+    cursor: pointer;
+}

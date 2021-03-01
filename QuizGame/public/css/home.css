@@ -13,6 +13,7 @@ nav
 }
 form button
 {
-    padding: 1em 2em;
-    color: white;
+    background: white;
+    padding: .6em 2em;
+    color: black;
 }

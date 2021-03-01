@@ -1,5 +1,6 @@
 const express = require("express");
 const ApplicationError = require("./ApplicationError");
+const TestRouter = require("./routers/Test");
 const AuthorizationRouter = require("./routers/Authorization");
 const path = require("path");
 const app = express();
@@ -9,11 +10,12 @@ app.set("views", path.join(__dirname, "views"));
 
 ///// Middleware
 app.use(AuthorizationRouter);
+app.use(TestRouter);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res)=>{
     if (req.session.userId)
-        res.render("home", {title: "Home", username: req.session.username, stylesheets:null});
+        res.redirect("/home");
     else
         res.render("index", {title: "Home", username: null, stylesheets:null});
 });
