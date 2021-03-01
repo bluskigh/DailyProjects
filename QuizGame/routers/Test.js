@@ -27,10 +27,18 @@ router.get("/home", (req, res)=>{
 
 router.get("/addTest", verifyAction, (req, res)=>{
     // redirect to the test page
-    res.render("test", {title: "Creating Test", creating: true, username: req.session.username, stylesheets:["css/testEdit.css"]});
+    res.render("test", {title: "Creating Test", creating: true, username: req.session.username, stylesheets:["css/testEdit.css"], testId: null});
 });
 router.post("/addTest", (req, res)=>{
-    const { title, desc, subject } = req.body
+    const { title, desc, subject, questions } = req.body;
+    TestModel.addTest(req.session.userId, title, desc, subject, questions)
+    .then((r)=>{
+        if (r)
+            res.JSON({result: true});
+    })
+    .catch((e)=>{
+        throw e;
+    })
 });
 router.post("/updateQuestion", (req, res)=>{
     console.log(req.body);
@@ -38,9 +46,17 @@ router.post("/updateQuestion", (req, res)=>{
     console.log(req.query);
     const { question, answer } = req.body;
 });
-router.post("/test/:testId", verifyAction, (req, res)=>{
+router.get("/test/:testId", verifyAction, (req, res)=>{
+    const {testId} = req.params;
     // get testid informatin, send to the test page
-    res.render("test", {title: "test_title_here", creating: false, stylesheets:["css/testView.css"]});
+    // provide the basic test information
+    TestModel.getIndividualInfo(testId, req.session.userId)
+    .then((r)=>{
+        res.render("test", {title: "test_title_here", creating: false, stylesheets:["css/testView.css"], testId: testId, testInfo: r});
+    })
+    .catch((e)=>{
+        throw e;
+    });
     // provide data
 });
 router.get("/getTest", verifyAction, (req, res)=>{

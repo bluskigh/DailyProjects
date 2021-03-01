@@ -1,5 +1,5 @@
 <%-include("partials/header")%>
-        <section>
+        <section id="testContainer" name="<%=testId%>">
             <% if (creating) { %>
                 <form action="/createTest">
                     <input type="text" name="title" placeholder="Test Title" required>
@@ -16,8 +16,12 @@
                     <!-- Default we are going to display one available already to edit -->
                 </div>
                 <button id="addQuestion">Add Question</button>
+                <button id="done">Done</button>
             <% } else { %>
-                <h1>Loading test functionality not impleented yet....</h1>
+                <h1><%=testInfo.title%></h1>
+                <p><%=testInfo.desc%></p>
+                <b><%=testInfo.subject%></b>
+                <!-- here display all the questions and answers -->
             <% } %>
         </section>
     </main>
