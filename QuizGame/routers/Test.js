@@ -69,8 +69,8 @@ router.post("/deleteTest", verifyAction, (req, res)=>{
         .then((r)=>{
             res.json(r);
         })
-        .catch((e)=>{
-            throw e;
+            .catch((e)=>{
+                throw e;
         })
     } else {
         res.json({result: false});

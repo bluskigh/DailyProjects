@@ -1,10 +1,24 @@
 const questions = document.querySelectorAll(".question");
-let answered = new Array(questions.length);
+const questionsLength = questions.length; 
+const resultContainer = document.querySelector("#result"); 
+
+let answered = new Array(questionsLength);
 for (const question of questions) {
     console.log(question.children);
 }
 
 let correct = 0;
+
+function disableRadios() {
+    console.log(questionsLength);
+    for (const question of questions) {
+        // get each input, and disable it
+        for (let i = 1; i < question.children.length; i++) {
+            const current = question.children[i].children[0];
+            current.disabled = true;
+        }
+    }
+}
 
 const submitButton = document.querySelector("#submit");
 submitButton.addEventListener("click", function(){
@@ -26,10 +40,19 @@ submitButton.addEventListener("click", function(){
             correct++;
         }
     }
+
+    this.disabled = true;
+    disableRadios();
     
-    // TODO display the score on the screen.
-    console.log("Final score: " + (correct / questions.length) * 100 );
-    // get the scores for everything
+    const finalScore = (correct / questionsLength) * 100;
+    resultContainer.classList.toggle("hidden");
+    resultContainer.children[0].innerText = "Grade: " +  finalScore;
+});
+
+const takeAgain = document.querySelector("#takeAgain");
+takeAgain.addEventListener("click", function(){
+    // reload the page
+    window.location.reload(true);
 });
 
 function selected(obj) {

@@ -94,7 +94,6 @@ module.exports.getIndividualInfo = (userId, testId)=>{
             for (let question of questions)
             {
                 if (testId == question.testId) {
-                    question.answer = question.answer;
                     const possible = getPossibleAnswers(question.answer);
                     question.possible = possible;
                     result.push(question);
