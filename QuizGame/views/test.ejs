@@ -1,10 +1,14 @@
 <%-include("partials/header")%>
         <section id="testContainer" name="<%=testId%>">
             <% if (creating) { %>
+                <h1>Test Information: </h1>
                 <form action="/createTest">
+                    <label for="title">Title: </label>
                     <input type="text" name="title" placeholder="Test Title" required>
+                    <label for="desc">Description: </label>
                     <input type="text" name="desc" placeholder="Test Description" required>
                     <!-- TODO: allow them add different options,load them here. -->
+                    <label for="subject">Subject: </label>
                     <select name="subject" id="">
                         <option value="math">Math</option>
                         <option value="science">Science</option>
@@ -12,6 +16,8 @@
                         <option value="custom">Custom</option>
                     </select>
                 </form>
+                <hr>
+                <h1>Questions </h1>
                 <div id="questions">
                     <!-- Default we are going to display one available already to edit -->
                 </div>
@@ -23,18 +29,26 @@
                 <b><%=testInfo.subject%></b>
                 <!-- here display all the questions and answeres -->
                 <% for (const question of questions) { %>
-                    <div class="question">
+                    <div class="question" name='0'>
                         <h2>Q) <%=question.question%></h2>
                         <!-- generate the available question-->
-                        <% for (const p of question.possible) { %>
-                            <p><%=p%></p>
+                        <% for (const p in question.possible) { %>
+                            <div class="questionContainer" name="<%=true ? question.possible[p] == question.answer: false%>">
+                                <input type="radio" name="<%=question.question%>" id="<%=p%>" onclick="selected(this)"> 
+                                <label for="<%=p%>"><%=question.possible[p]%></label>
+                            </div>
                         <% } %>
                     </div>
+                    <button id="submit">Submit</button>
                 <% } %>
             <% } %>
         </section>
     </main>
     
-    <script src="js/test.js"></script>
+    <% if (creating) { %> 
+        <script src="js/editingTest.js"></script>
+    <% } else { %>
+        <script src="js/testing.js"></script>
+    <% } %>
 </body>
 </html>

@@ -5,17 +5,18 @@
                 <% for (const test of tests) { %>
                     <div>
                         <form action="/test" method="post" class="indivContainer" name="<%=test._id%>">
-                            <button type="submit" name="testId" value="<%=test._id%>">
-                                <b><%=test.subject%></b>
-                                <div class="indiv">
-                                    <div>
+                            <input type="text" class="hidden" name="testId" value="<%=test._id%>">
+                            <div class="indivContainer">
+                                <button>
+                                    <b><%=test.subject%></b>
+                                    <div class="indiv">
                                         <h1><%=test.title%></h1>
                                         <p><%=test.desc%></p>
                                     </div>
-                                </div>
-                            </button>
+                                </button>
+                                <button type="button" class="deleteTest">Delete Test</button>
+                            </div>
                         </form>
-                        <button class="deleteTest">Delete Test</button>
                     </div>
                 <% } %>
             <% } else {%>
@@ -34,7 +35,7 @@
         for (const button of deleteButtons) {
             button.addEventListener("click", function(){
                 // get the current test id
-                const id = this.parentElement.children[0].getAttribute("name");
+                const id = this.parentElement.parentElement.getAttribute("name");
                 // send fetch request to delete this test
                 fetch("/deleteTest", {
                     method: "POST",
@@ -49,7 +50,7 @@
                 .then((r)=>{
                     if (r.result) {
                         // did good, so remove from test section
-                        testContainer.removeChild(this.parentElement);
+                        testContainer.removeChild(this.parentElement.parentElement);
                     }
                     else {
                         alert("We could not remove this.");

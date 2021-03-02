@@ -22,11 +22,17 @@ const getQuestions = ()=>{
 
 const questionsContainer = document.querySelector("#questions");
 function createInput(name) {
+    const container = document.createElement("div");
+    container.classList.add("columnFlex");
+    const label = document.createElement("label");
+    label.innerText = name;
+    container.appendChild(label);
     const temp = document.createElement("input");
     temp.type="text";
     temp.setAttribute("name", name);
     temp.setAttribute("placeholder", name + " here");
-    return temp;
+    container.appendChild(temp);
+    return container;
 }
 
 function createButton(name, symbol) {
@@ -53,7 +59,7 @@ function generateQuestion() {
     const deleteButton = createButton("delete", "X");
     deleteButton.addEventListener("click", function(){
         const parentForm = this.parentElement.parentElement; 
-        questionsContainer.removeChild(parentForm);
+        questionsContainer.removeChild(this.parentElement);
         questions.splice(questions.indexOf(parentForm), 1);
     });
     // const moveButton = createButton("move", "|");
@@ -160,3 +166,4 @@ doneButton.addEventListener("click", function(){
 
 // On load of the page, we want to place a question for the user already there
 generateQuestion();
+
