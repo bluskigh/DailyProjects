@@ -23,7 +23,7 @@ const QuestionSchema = new mongoose.Schema({
 });
 const QuestionModel = new mongoose.model("Question", QuestionSchema); 
 
-module.exports.getTests = (userId)=>{
+const getTests = (userId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
             const result = await TestModel.find({userId});
@@ -34,13 +34,22 @@ module.exports.getTests = (userId)=>{
             reject(e);
         }
     });
-};
+}
+
+module.exports.getTests = getTests;
+
 module.exports.getIndividualInfo = (userId, testId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
-            const result = await TestModel.find({_id: testId, userId});
-            console.log(result);
-            resolve(result);
+            const questions = await QuestionModel.find({}); 
+            let result = [];
+            for (const question of questions)
+            {
+                if (testId == question.testId)
+                    result.push(question);
+            }
+            const testInfo = await TestModel.findOne({_id: testId, userId: userId});
+            resolve([testInfo, result]);
         } catch(e) {
             reject(e);
         }
@@ -65,3 +74,4 @@ module.exports.addTest = (userId, title, desc, subject, questions)=>{
         }
     });
 };
+module.exports.model = TestModel;

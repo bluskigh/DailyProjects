@@ -21,7 +21,14 @@
                 <h1><%=testInfo.title%></h1>
                 <p><%=testInfo.desc%></p>
                 <b><%=testInfo.subject%></b>
-                <!-- here display all the questions and answers -->
+                <!-- here display all the questions and answeres -->
+                <% for (const question of questions) { %>
+                    <div class="question">
+                        <h2>Q) <%=question.question%></h2>
+                        <!-- generate the available question-->
+                        <p><%=question.answer%></p>
+                    </div>
+                <% } %>
             <% } %>
         </section>
     </main>

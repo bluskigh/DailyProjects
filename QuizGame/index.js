@@ -6,12 +6,12 @@ const path = require("path");
 const app = express();
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "/views"));
 
 ///// Middleware
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(AuthorizationRouter);
 app.use(TestRouter);
-app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res)=>{
     if (req.session.userId)
