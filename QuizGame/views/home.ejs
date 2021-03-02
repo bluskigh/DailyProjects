@@ -1,19 +1,22 @@
 <%- include("partials/header") %>
         <h1>Tests</h1>
-        <section id="tests" name="alsdkfjasklfjalsdkfjaklsf">
+        <section id="tests">
             <% if (tests) { %>
                 <% for (const test of tests) { %>
-                    <form action="/test" method="post" class="indivContainer">
-                        <button type="submit" name="testId" value="<%=test._id%>">
-                            <b><%=test.subject%></b>
-                            <div class="indiv">
-                                <div>
-                                    <h1><%=test.title%></h1>
-                                    <p><%=test.desc%></p>
+                    <div>
+                        <form action="/test" method="post" class="indivContainer" name="<%=test._id%>">
+                            <button type="submit" name="testId" value="<%=test._id%>">
+                                <b><%=test.subject%></b>
+                                <div class="indiv">
+                                    <div>
+                                        <h1><%=test.title%></h1>
+                                        <p><%=test.desc%></p>
+                                    </div>
                                 </div>
-                            </div>
-                        </button>
-                    </form>
+                            </button>
+                        </form>
+                        <button class="deleteTest">Delete Test</button>
+                    </div>
                 <% } %>
             <% } else {%>
                 <h3>You do not have any tests.</h3>
@@ -26,6 +29,37 @@
     </main>
 
     <script>
+        const testContainer = document.querySelector("#tests"); 
+        const deleteButtons = document.querySelectorAll(".deleteTest");
+        for (const button of deleteButtons) {
+            button.addEventListener("click", function(){
+                // get the current test id
+                const id = this.parentElement.children[0].getAttribute("name");
+                // send fetch request to delete this test
+                fetch("/deleteTest", {
+                    method: "POST",
+                    headers: new Headers({
+                        "content-type":"application/json"
+                    }),
+                    body: JSON.stringify({
+                        testId: id
+                    })
+                })
+                .then(async (r)=>await r.json())
+                .then((r)=>{
+                    if (r.result) {
+                        // did good, so remove from test section
+                        testContainer.removeChild(this.parentElement);
+                    }
+                    else {
+                        alert("We could not remove this.");
+                    }
+                })
+                .catch((e)=>{
+                    console.error(e);
+                })
+            });
+        }
     </script>
 
 </body>

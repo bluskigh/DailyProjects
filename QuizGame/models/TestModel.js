@@ -126,4 +126,28 @@ module.exports.addTest = (userId, title, desc, subject, questions)=>{
         }
     });
 };
+module.exports.removeTest = (testId)=>{
+    return new Promise(async (resolve, reject)=>{
+        try { 
+            let result = await TestModel.deleteOne({_id: testId});
+            if (result) {
+                /*
+                 * Uncomment to delete all the questions correlated with the test.
+                 * For now keeping them, so I can have random questions possibilties to pick from
+                 * when generating test.
+                 */
+                //QuestionModel.deleteMany({testId})
+                //.then((r)=>{
+                    // move resolve() here if using deleteMany
+                //})
+                resolve({result: true});
+            }
+            else {
+                resolve({result: false})
+            }
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
 module.exports.model = TestModel;

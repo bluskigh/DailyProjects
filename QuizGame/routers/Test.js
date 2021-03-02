@@ -61,7 +61,21 @@ router.post("/test", verifyAction, (req, res)=>{
     // provide data
 });
 router.get("/getTest", verifyAction, (req, res)=>{
-    });
+});
+router.post("/deleteTest", verifyAction, (req, res)=>{
+    const { testId } = req.body;
+    if (testId) {
+        TestModel.removeTest(testId)
+        .then((r)=>{
+            res.json(r);
+        })
+        .catch((e)=>{
+            throw e;
+        })
+    } else {
+        res.json({result: false});
+    }
+});
 
 
 module.exports = router;
