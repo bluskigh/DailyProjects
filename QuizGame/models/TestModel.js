@@ -38,15 +38,67 @@ const getTests = (userId)=>{
 
 module.exports.getTests = getTests;
 
+let allQuestions = null;
+QuestionModel.find({})
+.then((r)=>{
+    allQuestions=r;
+    allQuestions.push("Default 1");
+    allQuestions.push("Default 2");
+})
+.catch((e)=>{console.log("Something went wrong getting all the queastions")});
+
+function genRandom(area) {
+    return Math.floor(Math.random()*area);
+}
+
+function isIn(array, target){
+    for (const item of array) {
+        if (item == target)
+            return true;
+    }
+    return false;
+}
+
+function getPossibleAnswers (answer) {
+    const length = allQuestions.length;
+
+    let temp = [];
+    let random = null;
+    for (let i = 0; i < 3; i++)
+    {
+        while (temp.length < 4) {
+            random = genRandom(length);
+            const picked = allQuestions[random];
+            if (isIn(temp, picked.answer) || picked.answer === answer) {
+                continue;
+            }
+            else {
+                if (picked.answer)
+                    temp.push(picked.answer);
+                else 
+                    temp.push(picked)
+                break;
+            }
+        }
+    }
+    random = genRandom(length);
+    temp.splice(random, 0, answer);
+    return temp;
+} 
+
 module.exports.getIndividualInfo = (userId, testId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
-            const questions = await QuestionModel.find({}); 
+            let questions = await QuestionModel.find({}); 
             let result = [];
-            for (const question of questions)
+            for (let question of questions)
             {
-                if (testId == question.testId)
+                if (testId == question.testId) {
+                    const possible = getPossibleAnswers(question.answer);
+                    question.answer = possible;
+                    question.possible = possible;
                     result.push(question);
+                }
             }
             const testInfo = await TestModel.findOne({_id: testId, userId: userId});
             resolve([testInfo, result]);
