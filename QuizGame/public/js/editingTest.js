@@ -1,3 +1,30 @@
+const subjectSelector = document.querySelector("#subjectContainer");
+function tempOption(value) {
+    const temp = document.createElement("option");
+    temp.setAttribute("value", value);
+    temp.innerText = value;
+    subjectSelector.appendChild(temp);
+}
+fetch("/getSubjects")
+.then(async (r) => await r.json())
+.then((r)=>{
+    if (r) {
+        for (const subject of r) {
+            tempOption(subject.title);
+        }
+    } else {
+        // set defaults
+        tempOption("Math");
+        tempOption("Reading");
+        tempOption("Algebra");
+        tempOption("English");
+        // this may not be a good idea... will come back to it later.
+    }   
+})
+.catch((e)=>{
+    console.error(e);
+})
+
 const testId = document.querySelector("#testContainer").getAttribute("name");
 
 const questionsContainer = document.querySelector("#questions");
@@ -25,13 +52,13 @@ function createButton(name, symbol) {
 } 
 
 function deleteClicked(obj) {
+    console.log("delete clicked");
     const parentForm = obj.parentElement.parentElement; 
     questionsContainer.removeChild(parentForm);
     try {
         questions.splice(questions.indexOf(parentForm), 1);
     } catch(e) {
-        const index = obj.
-        questions.splice()
+        console.error(e);
     }
 }
 
@@ -69,7 +96,7 @@ function generateQuestion(questionId=null, questionValue=null, answerValue=null)
 
 
 const getQuestions = ()=>{
-    if (testId != null)
+    if (testId != "")
     {
         fetch("/getQuestions/" + testId)
         .then(async (r)=>await r.json())

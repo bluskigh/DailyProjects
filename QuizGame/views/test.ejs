@@ -9,12 +9,8 @@
                     <input type="text" name="desc" value="<%=testInfo ? testInfo.desc : 'Description here'%>" required>
                     <!-- TODO: allow them add different options,load them here. -->
                     <label for="subject">Subject: </label>
-                    <select name="subject" id="">
+                    <select name="subject" id="subjectContainer">
                         <!-- TODO: do the selected for this. -->
-                        <option value="math">Math</option>
-                        <option value="science">Science</option>
-                        <option value="computers">Computers</option>
-                        <option value="custom">Custom</option>
                     </select>
                 </form>
                 <hr>
@@ -22,7 +18,7 @@
                 <div id="questions">
                     <!-- Default we are going to display one available already to edit -->
                 </div>
-                <button id="addQuestion">Add Question</button>
+                <button id="addQuestion">Add Question</button>i
                 <% if (creating && testInfo) { %>
                     <button id="edit">Edit</button>
                 <% } else { %>

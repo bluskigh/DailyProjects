@@ -1,34 +1,4 @@
 const testContainer = document.querySelector("#tests"); 
-const deleteButtons = document.querySelectorAll(".deleteTest");
-for (const button of deleteButtons) {
-    button.addEventListener("click", function(){
-        // get the current test id
-        const id = this.parentElement.parentElement.getAttribute("name");
-        // send fetch request to delete this test
-        fetch("/deleteTest", {
-            method: "POST",
-            headers: new Headers({
-                "content-type":"application/json"
-            }),
-            body: JSON.stringify({
-                testId: id
-            })
-        })
-        .then(async (r)=>await r.json())
-        .then((r)=>{
-            if (r.result) {
-                // did good, so remove from test section
-                testContainer.removeChild(this.parentElement.parentElement);
-            }
-            else {
-                alert("We could not remove this.");
-            }
-        })
-        .catch((e)=>{
-            console.error(e);
-        })
-    });
-}
 
 const testSection = document.querySelector("#testSection");
 // on load, get all the tests that belong to the user
@@ -79,6 +49,34 @@ fetch("/getTestInformation")
             testsContainers.push(form);
             testSection.appendChild(form);
             //////// TODO LEFT OFF: finish sorting... now you can move the forms around.
+
+            deleteButton.addEventListener("click", function(){
+                // get the current test id
+                // send fetch request to delete this test
+                fetch("/deleteTest", {
+                    method: "POST",
+                    headers: new Headers({
+                        "content-type":"application/json"
+                    }),
+                    body: JSON.stringify({
+                        testId: test._id
+                    })
+                })
+                .then(async (r)=>await r.json())
+                .then((r)=>{
+                    if (r.result) {
+                        // did good, so remove from test section
+                        testContainer.removeChild(this.parentElement);
+                    }
+                    else {
+                        alert("We could not remove this.");
+                    }
+                })
+                .catch((e)=>{
+                    console.error(e);
+                })
+            });
+
         }
     } else {
         document.querySelector("#testMessage").classList.remove("hidden");
