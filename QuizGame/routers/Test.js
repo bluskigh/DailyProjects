@@ -19,7 +19,6 @@ router.get("/home", (req, res)=>{
     if(req.session.userId) {
         TestModel.getTests(req.session.userId)
         .then((r)=>{
-            console.log(r);
             res.render("home", {title: "Home", username: req.session.username, stylesheets: null, tests: r});
         })
         .catch(e=>{throw e});
@@ -34,9 +33,7 @@ router.get("/addTest", verifyAction, (req, res)=>{
 });
 router.post("/modifyTest", (req, res)=>{
     const { add, title, desc, subject, questions, testId } = req.body;
-    console.log("Test id given in modifyTest route: ", testId);
     if (add) {
-        console.log("this ran");
         TestModel.addTest(req.session.userId, title, desc, subject, questions)
         .then((r)=>{
             if (r)
@@ -47,10 +44,8 @@ router.post("/modifyTest", (req, res)=>{
         })
     } else {
         try {
-            console.log("Everything below this is part of the modify method: -----------");
             TestModel.modify(req.session.userId, testId, title, desc, subject, questions)
             .then((r)=>{
-                console.log("getting the result here");
                 if (r)
                     res.json({result: true});
             })
@@ -80,7 +75,15 @@ router.post("/test", verifyAction, (req, res)=>{
     });
     // provide data
 });
-router.get("/getTest", verifyAction, (req, res)=>{
+router.get("/getTestInformation", verifyAction, (req, res)=>{
+    // returns all the test correlated with the user
+    TestModel.getTests(req.session.userId)
+    .then((r)=>{
+        res.json(r);
+    })
+    .catch((e)=>{
+        throw e;
+    })
 });
 router.post("/deleteTest", verifyAction, (req, res)=>{
     const { testId } = req.body;
@@ -99,10 +102,8 @@ router.post("/deleteTest", verifyAction, (req, res)=>{
 
 router.get("/editTest", (req, res)=>{
     const { testId } = req.query;
-    console.log(testId);
     TestModel.getIndividualInfo(req.session.userId, testId)
     .then((r)=>{
-        console.log(r);
         res.render("test", {title: "Editing the test", creating: true, username: req.session.username, stylesheets:["css/testEdit.css"], testInfo: r[0], questions: r[1], testId: r[0]._id});
     })
     .catch((e)=>{
