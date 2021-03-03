@@ -1,33 +1,15 @@
 const testId = document.querySelector("#testContainer").getAttribute("name");
 
-let questions = [];
-
-const getQuestions = ()=>{
-    console.log(testId);
-    if (testId != null)
-    {
-        fetch("/getQuestions/" + testId)
-        .then(async (r)=>await r.json())
-        .then((r)=>{
-            console.log(typeof(r));
-            console.log(r);
-            // make questions equal to the r array
-            questions = r;
-        })
-        .catch((e)=>{
-            console.log("There seems to be an error", e);
-        })
-    }
-};
-
 const questionsContainer = document.querySelector("#questions");
-function createInput(name) {
+function createInput(name, inputValue=null) {
     const container = document.createElement("div");
     container.classList.add("columnFlex");
     const label = document.createElement("label");
     label.innerText = name;
     container.appendChild(label);
     const temp = document.createElement("input");
+    if (inputValue) 
+        temp.value = inputValue;
     temp.type="text";
     temp.setAttribute("name", name);
     temp.setAttribute("placeholder", name + " here");
@@ -42,33 +24,72 @@ function createButton(name, symbol) {
     return temp;
 } 
 
+function deleteClicked(obj) {
+    const parentForm = obj.parentElement.parentElement; 
+    questionsContainer.removeChild(parentForm);
+    try {
+        questions.splice(questions.indexOf(parentForm), 1);
+    } catch(e) {
+        const index = obj.
+        questions.splice()
+    }
+}
+
+let questions = [];
+
 // Adds question to the questionsContainer 
-function generateQuestion() {
+function generateQuestion(questionId=null, questionValue=null, answerValue=null) {
     const form = document.createElement("form");
     form.addEventListener("submit", function(e){
         e.preventDefault();
         console.log("this is running");
     });
+    if (questionId)
+        form.setAttribute("name", questionId);
     form.classList.add("question");
-    const questionInput = createInput("question");
-    const answerInput = createInput("answer");
+    const questionInput = createInput("question", questionValue);
+    const answerInput = createInput("answer", answerValue);
     form.appendChild(questionInput);
     form.appendChild(answerInput);
     const options = document.createElement("div");
     options.classList.add("questionOptions");
     const deleteButton = createButton("delete", "X");
     deleteButton.addEventListener("click", function(){
-        const parentForm = this.parentElement.parentElement; 
-        questionsContainer.removeChild(this.parentElement);
-        questions.splice(questions.indexOf(parentForm), 1);
+        deleteClicked(this);
     });
     // const moveButton = createButton("move", "|");
     options.appendChild(deleteButton);
     // options.appendChild(moveButton);
     form.appendChild(options);
     questionsContainer.appendChild(form);
+    const hr = document.createElement("hr"); 
+    questionsContainer.appendChild(hr);
     questions.push(form);
 }
+
+
+const getQuestions = ()=>{
+    if (testId != null)
+    {
+        fetch("/getQuestions/" + testId)
+        .then(async (r)=>await r.json())
+        .then((r)=>{
+            // make questions equal to the r array
+            // well go to the server, get a list of questions that are related to the currente test the user is in right now 
+            for (const question of r) {
+                generateQuestion(question._id, question.question, question.answer);
+            }
+
+            // On load of the page, we want to place a question for the user already there
+            generateQuestion();
+        })
+        .catch((e)=>{
+            console.log("There seems to be an error", e);
+        })
+    }
+};
+getQuestions();
+
 // Add a question
 const addQuestion = document.querySelector("#addQuestion");
 addQuestion.addEventListener("click", function(){
@@ -108,7 +129,7 @@ for (const form of forms) {
 }
 
 const doneButton = document.querySelector("#done");
-doneButton.addEventListener("click", function(){
+function doneOreditClicked(obj, isDone) { 
     if (questions.length >= 1) { 
         const testTitle = document.querySelector("[name=title]").value; 
         const testDesc = document.querySelector("[name=desc]").value; 
@@ -119,10 +140,14 @@ doneButton.addEventListener("click", function(){
             const current = questions[question];
             const questionValue = current.querySelector("[name=question]").value;
             const answerValue = current.querySelector("[name=answer]").value;
+            let id = null;
+            if (current.getAttribute("name"))
+                id = current.getAttribute("name")
 
             if (questionValue.length >= 1 && answerValue.length >= 1)
             {
                 result.push({
+                    questionId: id,
                     question: questionValue,
                     answer: answerValue,
                     index: question
@@ -133,12 +158,14 @@ doneButton.addEventListener("click", function(){
         // went throw and did not include the one that weren't filled in.
         if (result.length >= 1)
         {
-            fetch("/addTest", {
+            fetch("/modifyTest", {
                 method: "POST",
                 headers: new Headers({
                     "content-type": "application/json"
                 }),
                 body: JSON.stringify({
+                    testId: isDone ? null : testId,
+                    add: isDone,
                     title: testTitle,
                     desc: testDesc,
                     subject: testSubject,
@@ -146,7 +173,7 @@ doneButton.addEventListener("click", function(){
                 })
             })
             .then(async (r)=>await r.json())
-            .then((r)=>{
+            .then((result)=>{
                 if (result)
                     document.location.href = "/home";
                 else
@@ -162,8 +189,18 @@ doneButton.addEventListener("click", function(){
             console.log("There is nothing to add with. Tell the user to add some questions to this test.");
         }
     }
-});
+}
+if (doneButton) {
+    doneButton.addEventListener("click", function(){
+        doneOreditClicked(this, true);
+    });
+}
 
-// On load of the page, we want to place a question for the user already there
-generateQuestion();
 
+const editButton = document.querySelector("#edit"); 
+if (editButton) {
+    editButton.addEventListener("click", function(){
+        // false, becuase we are not adding, but modifying this.
+        doneOreditClicked(this, false);
+    });
+}

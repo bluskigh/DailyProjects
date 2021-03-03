@@ -1,0 +1,7 @@
+label:hover
+{
+    cursor: pointer;
+}
+input[type=radio]:hover
+{
+}

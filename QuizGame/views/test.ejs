@@ -4,12 +4,13 @@
                 <h1>Test Information: </h1>
                 <form action="/createTest">
                     <label for="title">Title: </label>
-                    <input type="text" name="title" placeholder="Test Title" required>
+                    <input type="text" name="title" value="<%=testInfo ? testInfo.title : 'Title here' %>" required>
                     <label for="desc">Description: </label>
-                    <input type="text" name="desc" placeholder="Test Description" required>
+                    <input type="text" name="desc" value="<%=testInfo ? testInfo.desc : 'Description here'%>" required>
                     <!-- TODO: allow them add different options,load them here. -->
                     <label for="subject">Subject: </label>
                     <select name="subject" id="">
+                        <!-- TODO: do the selected for this. -->
                         <option value="math">Math</option>
                         <option value="science">Science</option>
                         <option value="computers">Computers</option>
@@ -22,11 +23,21 @@
                     <!-- Default we are going to display one available already to edit -->
                 </div>
                 <button id="addQuestion">Add Question</button>
-                <button id="done">Done</button>
+                <% if (creating && testInfo) { %>
+                    <button id="edit">Edit</button>
+                <% } else { %>
+                    <button id="done">Done</button>
+                <% } %>
             <% } else { %>
-                <h1><%=testInfo.title%></h1>
-                <p><%=testInfo.desc%></p>
-                <b><%=testInfo.subject%></b>
+                <section id="testInformation">
+                    <h1><%=testInfo.title%></h1>
+                    <p><%=testInfo.desc%></p>
+                    <b><%=testInfo.subject%></b>
+                    <form action="/editTest" method="GET">
+                        <input type="text" name="testId" value="<%=testInfo._id%>" class="hidden">
+                        <button type="submit" id="editTest">Edit</button>
+                    </form>
+                </section>
                 <!-- here display all the questions and answeres -->
                 <% for (const question of questions) { %>
                     <div class="question" name='0'>

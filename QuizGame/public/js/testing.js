@@ -63,3 +63,5 @@ function selected(obj) {
     }
     obj.parentElement.parentElement.setAttribute("name", "1");
 }
+
+const editButton = document.querySelector("#ediitButton");

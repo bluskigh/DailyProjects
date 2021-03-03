@@ -100,16 +100,8 @@ function getTestInfo(testId, userId) {
 function getTestQuestions(testId) {
     return new Promise(async (resolve, reject)=>{
         try {
-            let questions = await QuestionModel.find({}); 
-            let result = [];
-            for (let question of questions)
-            {
-                if (testId == question.testId) {
-                    const possible = getPossibleAnswers(question.answer);
-                    question.possible = possible;
-                    result.push(question);
-                }
-            }
+            const result = await QuestionModel.find({testId: testId});
+            console.log("The result inside of the getTEstQuestions(): ", result);
             resolve(result);
         } catch(e) {
             reject(e);
@@ -119,7 +111,17 @@ function getTestQuestions(testId) {
 module.exports.getIndividualInfo = (userId, testId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
-            const result = await getTestQuestions(testId);
+            //let questions = await QuestionModel.find({}); 
+            //let result = [];
+            //for (let question of questions)
+            //{
+                //if (testId == question.testId) {
+                    //const possible = getPossibleAnswers(question.answer);
+                    //question.possible = possible;
+                    //result.push(question);
+                //}
+            //}
+            getTestQuestions(testId);
             // const testInfo = await TestModel.findOne({_id: testId, userId: userId});
             const testInfo = await getTestInfo(testId, userId);
             resolve([testInfo, result]);
@@ -172,37 +174,24 @@ module.exports.removeTest = (testId)=>{
     });
 };
 module.exports.modify = (userId, testId, title, desc, subject, questions)=>{
-    console.log("this was called atleast");
-    return new Promise(async (resolve, reject)=>{
-        try {
-            // first add any modification to the test model itself
-            // firs get information regarding the test selected
-            const result = await getTestInfo(testId, userId);
-            // compare given title with the given desc
-            if (result.title != title)
-                await TestModel.updateOne({_id: testId}, {title: title}); 
-            if (result.desc != desc)
-                await TestModel.updateOne({_id: testId}, {desc: desc});
-            if (result.subject != subject)
-                await TestModel.updateOne({_id: testId}, {subject: subject});
-            // now update the questions
-            for (const question of questions) {
-                if (question.questionId) { 
-                    // modify the question
-                    const success = await QuestionModel.updateOne({_id: question.questionId}, {title: question.title, desc: question.desc});
-                    console.log("Was it a sucess to update ", question, " : ", success);
-                } else {
-                    // add the question 
-                    const temp = new QuestionModel({testId: testId, question: question.question, answer: question.answer, index: question.index});
-                    await temp.save();
-                    console.log("Just added the question");
-                }
-            }
-            resolve(true);
-        } catch(e) {
-            reject(e);
+    return new Promise((resolve, reject)=>{
+        // first add any modification to the test model itself
+        // firs get information regarding the test selected
+        const result = await getTestInfo(userId, testId);
+        // compare given title with the given desc
+        if (result.title != title)
+            await TestModel.updateOne({_id: testId}, {title: title}); 
+        if (result.desc != desc)
+            await TestModel.updateOne({_id: testId}, {desc: desc});
+        if (result.subject != subject)
+            await TestModel.updateOne({_id: testId}, {subject: subject});
+        // now update the questions
+        for (const question of questions) {
+            const success = await QuestionModel.updateOne({_id: question.questionId});
+            console.log("Was it a sucess to update ", question, " : ", success);
         }
     });
+
 };
 
 module.exports.model = TestModel;
