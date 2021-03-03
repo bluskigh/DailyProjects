@@ -1,0 +1,29 @@
+<%-include("partials/header")%>
+        <section id="message" class="hidden">
+            <h1 id="messageTitle">Message Title...</h1>
+            <button id="messageAction">Ok</button>
+        </section>
+
+        <h1>Options</h1>
+        <section id="subject">
+            <h2>Subject</h2>
+            <!-- load all the subjects currently available here. -->
+            <section id="subjectsContainer">
+                <div id="subjects">
+                    <h3 class="hidden" id="emptyStatus">You do not have any subjects.</h3>
+                </div>
+                <button id="addMore">+</button>
+            </section>
+
+            <form action="#" id="addSubjectForm" class="hidden">
+                <h3>New Subject: </h3>
+                <label for="subjecTitle">Title</label>
+                <input type="text" placeholder="ex: Mathematics" required>
+                <input type="color" required>
+                <button type="submit">Add</button>
+            </form>
+        </section>
+    </main>
+    <script src="js/options.js"></script>
+</body>
+</html>

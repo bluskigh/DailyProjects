@@ -78,6 +78,7 @@ fetch("/getTestInformation")
             // push the form onto the array, so I can move the items around with ease. 
             testsContainers.push(form);
             testSection.appendChild(form);
+            //////// TODO LEFT OFF: finish sorting... now you can move the forms around.
         }
     } else {
         document.querySelector("#testMessage").classList.remove("hidden");
@@ -88,7 +89,6 @@ fetch("/getTestInformation")
 })
 
 function subjectSort() {
-
 }
 
 const sortingMethod = document.querySelector("#sortingMethod");

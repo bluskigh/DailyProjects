@@ -1,8 +1,30 @@
+/*
+ * This file contains anything related to the user.
+ * That includes: auth/authorization, and preferences.
+ * Preferences, when user visits options, models such as Subject will be
+ * stored here.
+ */
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/quizGame")
     .then(r=>{console.log("Connected to database")})
     .catch(e=>{console.error(e)})
+
+const SubjectSchema = new mongoose.Schema({
+    userId: {
+        type: Object,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    color: {
+        type: String,
+        required: true
+    }
+});
+const SubjectModel = new mongoose.model("Subject", SubjectSchema);
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -46,6 +68,8 @@ module.exports.signUp = (username, password)=>{
             password = await encrypt(password);
             const temp = new UserModel({username, password});
             await temp.save();
+            // add default subjects
+            await SubjectModel.insertMany([{userId: temp._id, title: "Math", color: "#cc66ff"}, {userId: temp._id, title: "English", color: "#00ffcc"}, {userId: temp._id, title: "Computer", color: "#3333ff"}]);
             resolve({username, id: temp._id});
         } catch(e) {
             reject(e);
@@ -71,6 +95,40 @@ module.exports.logIn = (username, password)=>{
                 resolve(false);
             }
 
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.addSubject = (info)=>{
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const temp = new SubjectModel(info);
+            await temp.save();
+            console.log("The result of addSubject: ", temp);
+            resolve(temp._id);
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.getSubjects = (userId)=>{
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const result = await SubjectModel.find({userId});
+            resolve(result);
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.deleteSubject = (subjectId)=>{
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const result = await SubjectModel.deleteOne({_id: subjectId});
+            if (result)
+                resolve(true);
+            resolve(false);
         } catch(e) {
             reject(e);
         }

@@ -1,0 +1,32 @@
+#addSubjectForm 
+{
+    padding: 1em;
+    background: rgb(56, 56, 56);
+    position: absolute;
+    top: 40%;
+    left: 45%;
+}
+#addSubjectForm h3 
+{
+    margin: 0;
+}
+
+.bubble
+{
+    width: fit-content;
+    color: white;
+    border-radius: 1em;
+    transition: .5s ease;
+    margin: 0 .5em 0 0;
+}
+.bubble:hover
+{
+    box-shadow: 0em 0em .7em white;
+}
+
+#subjectsContainer
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
