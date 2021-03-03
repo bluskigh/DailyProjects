@@ -18,7 +18,7 @@
                 <div id="questions">
                     <!-- Default we are going to display one available already to edit -->
                 </div>
-                <button id="addQuestion">Add Question</button>i
+                <button id="addQuestion">Add Question</button>
                 <% if (creating && testInfo) { %>
                     <button id="edit">Edit</button>
                 <% } else { %>
@@ -34,23 +34,26 @@
                         <button type="submit" id="editTest">Edit</button>
                     </form>
                 </section>
-                <!-- here display all the questions and answeres -->
-                <% for (const question of questions) { %>
-                    <div class="question" name='0'>
-                        <h2>Q) <%=question.question%></h2>
-                        <!-- generate the available question-->
-                        <% for (const p in question.possible) { %>
-                            <div class="questionContainer" name="<%=true ? question.possible[p] == question.answer: false%>">
-                                <input type="radio" name="<%=question.question%>" questionid="<%=question.possible[p]%>" onclick="selected(this)"> 
-                                <label for="<%=question.possible[p]%>"><%=question.possible[p]%></label>
-                            </div>
-                        <% } %>
-                    </div>
-                <% } %>
-                <button id="submit">Submit</button>
-                <section id="result" class="hidden">
-                    <h1 id="score">Score: </h1>
-                    <button id="takeAgain">Take Again?</button>
+                <section id="questions">
+                    <!-- here display all the questions and answeres -->
+                    <% for (const question of questions) { %>
+                        <div class="question" name='0'>
+                            <h2>Q) <%=question.question%></h2>
+                            <!-- generate the available question-->
+                            <% for (const p in question.possible) { %>
+                                <div class="questionContainer" name="<%=true ? question.possible[p] == question.answer: false%>">
+                                    <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%>" onclick="selected(this)"> 
+                                    <label class="possibleLabel" for="<%=question.possible[p]%>"><%=question.possible[p]%></label>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <button id="submit">Submit</button>
+                    <section id="result" class="hidden">
+                        <h1 id="score">Score: </h1>
+                        <button id="takeAgain">Take Again?</button>
+                    </section>
                 </section>
             <% } %>
         </section>

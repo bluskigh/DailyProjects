@@ -5,3 +5,22 @@ label:hover
 input[type=radio]:hover
 {
 }
+
+#testInformation
+{
+    margin: 0 auto;
+    width: 50%;
+}
+#questions
+{
+    margin: 0 auto;
+    width: 50%;
+}
+.questionContainer:nth-child(even)
+{
+    background: gray;
+}
+.questionContainer:nth-child(odd)
+{
+    background: transparent;
+}
