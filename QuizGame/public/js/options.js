@@ -2,11 +2,18 @@
 On load, generate all the subjects currently available for the user.
 */
 const messageContainer = document.querySelector("#message");
+const messageButton = messageContainer.querySelector("#messageAction");
+messageButton.disabled = true;
 const subjectsContainer = document.querySelector("#subjects");
 const emptyStatus = document.querySelector("#emptyStatus");
 let bubbles = [];
 let deleted = null;
-const getBubbleById = (id)=>bubbles.filter((bubble)=>{bubble.id==id});
+const getBubbleById = (id)=>{
+    for (const bubble of bubbles) {
+        if (bubble.id == id)
+            return bubble;
+    }
+};
 
 function checkEmptyStatus () {
     // if bubbles is empty, and the message does not contain hidden, make it hidden.
@@ -32,8 +39,8 @@ function addBubbleToDB(title, color)
     .then((r)=>{
         if (r) {
             // everything went well add the thing to the container
-            subjectsContainer.appendChild(createBubble(title, color, r._id));
-            bubbles.push({title,color, id: r._id});
+            subjectsContainer.appendChild(createBubble(title, color, r.result));
+            bubbles.push({title,color, id: r.result});
             resetAddForm();
         } else {
             console.log("Something went wrong");
@@ -44,6 +51,11 @@ function addBubbleToDB(title, color)
     })
 }
 
+messageButton.addEventListener("click", function(){
+    addBubbleToDB(deleted.title, deleted.color);
+    this.disabled = true;
+    messageContainer.classList.toggle("hidden");
+})
 
 // BUBBLE? Is what a subject is called. It is going to be displayed as a bubble container.
 function createBubble(title, color="white", id) {
@@ -78,21 +90,24 @@ function createBubble(title, color="white", id) {
         .then(async (r)=>await r.json())
         .then((r)=>{
             if (r) {
-                console.log("removed from container");
                 // add to the deleted
                 // id from the local scope (function parameter)
-                deleted = getBubbleById(id)[0];
+                deleted = getBubbleById(id);
+                for (const bubble in bubbles) {
+                    if (bubbles[bubble].id == id)
+                        bubbles.splice(bubble, 1);
+                }
+                messageButton.disabled = false;
                 // show the message cotnainer
                 ////// This message container code can be moved into a function, along with the click listener callback.
                 messageContainer.classList.toggle("hidden");
                 messageContainer.querySelector("#messageTitle").innerText = "Undo";
-                messageContainer.querySelector("#messageAction").addEventListener("click", function(){
-                    checkEmptyStatus();
-                    // add bubble back to the database, and add here too.
-                    addBubbleToDB(title, color);
-                    // hide the message
-                    messageContainer.classList.toggle("hidden");
-                });
+                // setTimeout(()=>{
+                //     if (!messageContainer.classList.contains("hidden")) {
+                //         messageContainer.classList.toggle("hidden");
+                //     }
+                //     deleted = null;
+                // }, 8000);
             } else {
                 console.log("Something went wrong in /deleteSubject");
             }
@@ -134,6 +149,7 @@ addForm.addEventListener("submit", function(e){
     e.preventDefault();
     const title = this.querySelector("[type=text]").value;
     const color = this.querySelector("[type=color]").value;
+    this.classList.toggle("hidden");
     addBubbleToDB(title, color);
     // make a fetch request to add this subject
 });
