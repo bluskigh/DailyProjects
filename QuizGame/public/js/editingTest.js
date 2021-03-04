@@ -94,6 +94,8 @@ function generateQuestion(questionId=null, questionValue=null, answerValue=null)
     questions.push(form);
 }
 
+function shouldWarn() {
+}
 
 const getQuestions = ()=>{
     if (testId != "")
@@ -138,9 +140,10 @@ for (const form of forms) {
             headers: new Headers({
                 "content-type": "application/json"
             }),
-            boyd: JSON.stringify({
+            body: JSON.stringify({
                 question,
-                answer
+                answer,
+                subject: subjectSelector.value
             })
         })
         .then(async (r)=>await r.json())
@@ -208,7 +211,6 @@ function doneOreditClicked(obj, isDone) {
             })
             .catch((e)=>{
                 console.error(e);
-
             })
         }
         else

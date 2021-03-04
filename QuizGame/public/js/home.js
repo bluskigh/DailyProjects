@@ -81,7 +81,7 @@ fetch("/getTestInformation")
                         "content-type":"application/json"
                     }),
                     body: JSON.stringify({
-                        testId: test._id
+                        testId: test._id,
                     })
                 })
                 .then(async (r)=>await r.json())
@@ -144,6 +144,7 @@ function subjectSort() {
 function defaultSort() {
     // go through each, pop them out to the parents parent container,
     // and remove the current parentn's containers from existence (hide)
+
     let index = 0;
     for (const key in stuff) {
         for (const item of stuff[key].querySelectorAll(".indivContainer")) {
@@ -167,6 +168,11 @@ sortingMethod.addEventListener("change", function(){
             break;
         case "default":
             defaultSort();
+            break;
+        case "asc":
+            dateAsc();
+            break;
+        case "des":
             break;
         default:
             console.log("Well.. this is awkward");

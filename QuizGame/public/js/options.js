@@ -47,6 +47,9 @@ function addBubbleToDB(title, color)
             return
         }
     }
+    title = title.toLowerCase();
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+    console.log(title);
     // title not in the bubbles! Good to go!
     fetch("/addSubject", {
         method: "POST", 
@@ -150,6 +153,7 @@ fetch("/getSubjects")
 })
 .catch((e)=>{
     console.log("Failed loading subjects");
+    console.error(e);
 })
 
 // TODO: think about making the form universal

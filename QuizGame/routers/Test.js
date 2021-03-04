@@ -62,12 +62,11 @@ router.post("/updateQuestion", (req, res)=>{
     const { question, answer } = req.body;
 });
 router.post("/test", verifyAction, (req, res)=>{
-    let {testId} = req.body;
+    const {testId } = req.body;
     // get testid informatin, send to the test page
     // provide the basic test information
     TestModel.getIndividualInfo(req.session.userId, testId)
     .then((r)=>{
-        console.log("0-------", r[0], r[0].title);
         res.render("test", {title: "test_title_here", testId: r[0]._id, username: req.session.username, creating: false, stylesheets:["css/testView.css"], testInfo: r[0], questions: r[1]});
     })
     .catch((e)=>{
@@ -113,9 +112,9 @@ router.get("/editTest", (req, res)=>{
 
 router.get("/getQuestions/:testId", (req, res)=>{
     const { testId } = req.params;
-    TestModel.getIndividualInfo(req.session.userId, testId)
+    TestModel.getQuestions(testId)
     .then((r)=>{
-        res.json(r[1]);
+        res.json(r);
     })
     .catch((e)=>{
         throw e;

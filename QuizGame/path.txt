@@ -1,0 +1,6 @@
+For questions: 
+ if the current subject does not contain more than 3 avaialble questions to use, then ask the user to enter more than 3 questions to his test.
+else if the current subject does contain more than 3 available questions, then you can allow the user to make a test using only one question.
+
+By default the database though, is going to contain 4 default questions for the most basic subjects such as: Math, Reading, English, Science, Computer Science, Law, etc... 
+

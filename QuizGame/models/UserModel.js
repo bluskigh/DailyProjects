@@ -12,7 +12,7 @@ mongoose.connect("mongodb://localhost:27017/quizGame")
 
 const SubjectSchema = new mongoose.Schema({
     userId: {
-        type: Object,
+        type: String,
         required: true
     },
     title: {
@@ -69,7 +69,7 @@ module.exports.signUp = (username, password)=>{
             const temp = new UserModel({username, password});
             await temp.save();
             // add default subjects
-            await SubjectModel.insertMany([{userId: temp._id, title: "Math", color: "#cc66ff"}, {userId: temp._id, title: "English", color: "#00ffcc"}, {userId: temp._id, title: "Computer", color: "#3333ff"}]);
+            await SubjectModel.insertMany([{userId: temp._id, title: "Math", color: "#cc66ff"}, {userId: temp._id, title: "English", color: "#00ffcc"}, {userId: temp._id, title: "Computer", color: "#3333ff"}, {userId: temp._id, title: "Science", color: "#36c9ba"}]);
             resolve({username, id: temp._id});
         } catch(e) {
             reject(e);
