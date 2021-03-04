@@ -126,4 +126,14 @@ router.post("/editTest", (req, res)=>{
     res.send("still working on this functionality");
 });
 
+router.get("/isSubjectValid/:subject", (req, res)=>{
+    const { subject } = req.params;
+    TestModel.isSubjectValid(subject)
+    .then((r)=>{
+        res.json({result: r});
+    })
+    .catch((e)=>{
+        throw e;
+    })
+});
 module.exports = router;

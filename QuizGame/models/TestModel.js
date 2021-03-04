@@ -85,35 +85,39 @@ function isIn(array, target){
  * Finally, insert the actual answer in the possibleAnswers array.
  */
 function getPossibleAnswers (answer, subject) {
-    const length = allQuestions.length;
-
-    let possibleAnswers = [];
-    let randIndex = null;
-    for (let i = 0; i < 3; i++)
-    {
-        while (possibleAnswers.length < 4) {
-            randIndex = genRandom(length);
-            const picked = allQuestions[randIndex];
-            if (picked.underSubject == subject) {
-                if ((isIn(possibleAnswers, picked.answer) || picked.answer === answer)) {
-                    continue;
-                }
-                else {
-                    // some questions are weird and contain only answers.
-                    if (picked.answer)
-                        possibleAnswers.push(picked.answer);
-                    else 
-                        possibleAnswers.push(picked)
-                    // breaking because we found our answer
-                    break;
+    return new Promise(async (resolve, reject)=>{
+        try {
+            let possibleAnswers = [];
+            let randIndex = null;
+            const subjectQuestions = await QuestionModel.find({underSubject: subject}); 
+            const length = subjectQuestions.length;
+            for (let i = 0; i < 3; i++)
+            {
+                while (possibleAnswers.length < 4) {
+                    randIndex = genRandom(length);
+                    const picked = subjectQuestions[randIndex];
+                    if ((isIn(possibleAnswers, picked.answer) || picked.answer === answer)) {
+                        continue;
+                    }
+                    else {
+                        // some questions are weird and contain only answers.
+                        if (picked.answer)
+                            possibleAnswers.push(picked.answer);
+                        else 
+                            possibleAnswers.push(picked)
+                        // breaking because we found our answer
+                        break;
+                    }
                 }
             }
+            // why 4? the array is always going to be a length of 4(3 randomly picked question, and the with the inserted asnwer) 
+            random = genRandom(4);
+            possibleAnswers.splice(random, 0, answer);
+            resolve(possibleAnswers);
+        } catch(e) {
+            reject(e);
         }
-    }
-    // why 4? the array is always going to be a length of 4(3 randomly picked question, and the with the inserted asnwer) 
-    random = genRandom(4);
-    possibleAnswers.splice(random, 0, answer);
-    return possibleAnswers;
+    });
 } 
 
 /*
@@ -152,7 +156,7 @@ function getTestQuestions(testId, subject) {
             let result = [];
             for (let question of questions)
             {
-                const possible = getPossibleAnswers(question.answer, subject);
+                const possible = await getPossibleAnswers(question.answer, subject);
                 question.possible = possible;
                 result.push(question);
             }
@@ -320,5 +324,31 @@ module.exports.modify = (userId, testId, title, desc, subject, questions)=>{
     });
 };
 
+/*
+ * Goes through multiple questions, looking for questions under the given subject.
+ * Adding a counter, if the counter reaches 3, then the subject is valid. Meaning it does not need additional
+ * questions to be added to generate possible answers.
+ */
+module.exports.isSubjectValid = (subject) => {
+    return new Promise((resolve, reject)=>{
+        try {
+            // Problem, should you check allQuestions array? Or should you just get all the questions which are under the given subject. The problem with getting all the questions under the subject, is that we just want 3, if we have 3 then we return true. 
+            // So iterating through all of them is not a very bright idea.
+            let total = 0;
+            for (const question of allQuestions) {
+                if (total >= 3){
+                    resolve(true);
+                    break;
+                } else if (question.underSubject == subject) {
+                    total++;
+                }
+            }
+            // was not valid, did not encounter more than 3 qusetions that were under the given subject suace em up
+            resolve(false);
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
 // for general operations such as: find(), exists()
 module.exports.model = TestModel;

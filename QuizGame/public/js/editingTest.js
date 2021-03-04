@@ -5,6 +5,23 @@ function tempOption(value) {
     temp.innerText = value;
     subjectSelector.appendChild(temp);
 }
+let questionsNeeded = 1;
+subjectSelector.addEventListener("change", function() {
+    // TODO: add a container for a question right off the bat when the page is loaded.
+    fetch("/isSubjectValid/"+this.value)
+    .then(async (r)=>await r.json())
+    .then((r)=>{
+        if (!r.result)
+            questionsNeeded = 4;
+        else
+            questionsNeeded = 1;
+        determineDoneState();
+    })
+    .catch((e)=>{
+        console.error(e);
+    })
+});
+
 fetch("/getSubjects")
 .then(async (r) => await r.json())
 .then((r)=>{
@@ -64,8 +81,18 @@ function deleteClicked(obj) {
 
 let questions = [];
 
+const doneButton = document.querySelector("#done");
+doneButton.disabled = true;
+function determineDoneState() {
+    if (questions.length >= questionsNeeded)
+        doneButton.disabled = false;
+    else
+        doneButton.disabled = true;
+}
+
 // Adds question to the questionsContainer 
 function generateQuestion(questionId=null, questionValue=null, answerValue=null) {
+    determineDoneState();
     const form = document.createElement("form");
     form.addEventListener("submit", function(e){
         e.preventDefault();
@@ -83,6 +110,7 @@ function generateQuestion(questionId=null, questionValue=null, answerValue=null)
     const deleteButton = createButton("delete", "X");
     deleteButton.addEventListener("click", function(){
         deleteClicked(this);
+        determineDoneState();
     });
     // const moveButton = createButton("move", "|");
     options.appendChild(deleteButton);
@@ -90,11 +118,8 @@ function generateQuestion(questionId=null, questionValue=null, answerValue=null)
     form.appendChild(options);
     questionsContainer.appendChild(form);
     const hr = document.createElement("hr"); 
-    questionsContainer.appendChild(hr);
+    form.appendChild(hr)
     questions.push(form);
-}
-
-function shouldWarn() {
 }
 
 const getQuestions = ()=>{
@@ -108,9 +133,6 @@ const getQuestions = ()=>{
             for (const question of r) {
                 generateQuestion(question._id, question.question, question.answer);
             }
-
-            // On load of the page, we want to place a question for the user already there
-            generateQuestion();
         })
         .catch((e)=>{
             console.log("There seems to be an error", e);
@@ -142,8 +164,7 @@ for (const form of forms) {
             }),
             body: JSON.stringify({
                 question,
-                answer,
-                subject: subjectSelector.value
+                answer
             })
         })
         .then(async (r)=>await r.json())
@@ -158,9 +179,8 @@ for (const form of forms) {
     });
 }
 
-const doneButton = document.querySelector("#done");
 function doneOreditClicked(obj, isDone) { 
-    if (questions.length >= 1) { 
+    if (questions.length >= questionsNeeded) { 
         const testTitle = document.querySelector("[name=title]").value; 
         const testDesc = document.querySelector("[name=desc]").value; 
         const testSubject = document.querySelector("[name=subject]").value; 
@@ -180,7 +200,8 @@ function doneOreditClicked(obj, isDone) {
                     questionId: id,
                     question: questionValue,
                     answer: answerValue,
-                    index: question
+                    index: question,
+                    underSubject: testSubject
                 });
             }
         }
@@ -233,3 +254,6 @@ if (editButton) {
         doneOreditClicked(this, false);
     });
 }
+
+// onload, generate a question
+generateQuestion();

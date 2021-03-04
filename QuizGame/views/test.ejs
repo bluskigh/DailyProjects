@@ -42,8 +42,8 @@
                             <!-- generate the available question-->
                             <% for (const p in question.possible) { %>
                                 <div class="questionContainer" name="<%=true ? question.possible[p] == question.answer: false%>">
-                                    <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%>" onclick="selected(this)"> 
-                                    <label class="possibleLabel" for="<%=question.possible[p]%>"><%=question.possible[p]%></label>
+                                    <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%><%=question.question%>" onclick="selected(this)"> 
+                                    <label class="possibleLabel" for="<%=question.possible[p]%><%=question.question%>"><%=question.possible[p]%></label>
                                 </div>
                             <% } %>
                         </div>
