@@ -105,7 +105,6 @@ module.exports.addSubject = (info)=>{
         try {
             const temp = new SubjectModel(info);
             await temp.save();
-            console.log("The result of addSubject: ", temp);
             resolve(temp._id);
         } catch(e) {
             reject(e);
@@ -129,6 +128,16 @@ module.exports.deleteSubject = (subjectId)=>{
             if (result)
                 resolve(true);
             resolve(false);
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.getSubjectInformation = (subjectId)=>{
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const result = await SubjectModel.findOne({_id: subjectId});
+            resolve({title: result.title, color: result.color});
         } catch(e) {
             reject(e);
         }

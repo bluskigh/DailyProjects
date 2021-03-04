@@ -48,7 +48,10 @@ fetch("/getTestInformation")
             div.classList.add("indivContainer");
             const button = document.createElement("button");
             const bold = document.createElement("b");
-            bold.innerText = test.subject;
+            console.log(test.subject);
+            console.log(test.subject.title)
+            bold.innerText = test.subject.title;
+            bold.style.backgroundColor = test.subject.color;
             const testInfoDiv = document.createElement("div");
             testInfoDiv.classList.add("indiv");
             const h1 = document.createElement("h1");
@@ -144,18 +147,14 @@ function subjectSort() {
 function defaultSort() {
     // go through each, pop them out to the parents parent container,
     // and remove the current parentn's containers from existence (hide)
-
     let index = 0;
     for (const key in stuff) {
-        for (const item of stuff[key].querySelectorAll(".indivContainer")) {
-            const parentElement = item.parentElement.parentElement.parentElement;
-            if (parentElement) {
-                parentElement.removeChild(item.parentElement.parentElement);
-            }
-            // item.parentElement.parentElement.parentElement.appendChild(item);
-            appendToCol(index % 3, testsContainers[index]);
-            index++;
-        }
+        const current = stuff[key];
+        const query = current.querySelector(".indivContainer");
+        current.parentElement.removeChild(current);
+        appendToCol(index % 3, testsContainers[index]);
+        index++;
+
     }
     stuff = {}
 }

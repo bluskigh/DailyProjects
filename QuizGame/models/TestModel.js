@@ -8,7 +8,7 @@ const TestSchema = new mongoose.Schema({
     userId: Object,
     title: String,
     desc: String,
-    subject: String,
+    subject: Object,
     // created does not have to be required, as it will be given a default value of when it was created.
     created: {
         type: Date,
@@ -32,9 +32,16 @@ const QuestionModel = new mongoose.model("Question", QuestionSchema);
 const getTests = (userId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
-            const result = await TestModel.find({userId});
-            if (result.length >= 1)
-                resolve(result);
+            let results = await TestModel.find({userId});
+            if (results.length >= 1) {
+                let index = 0;
+                for (var result of results) {
+                    var temp = await UserModel.getSubjectInformation(result.subject);
+                    result.subject = temp;
+                    index++;
+                } 
+                resolve(results);
+            }
             resolve(false);
         } catch(e) {
             reject(e);
@@ -89,6 +96,8 @@ function getPossibleAnswers (answer, subject) {
         try {
             let possibleAnswers = [];
             let randIndex = null;
+            subject = await UserModel.getSubjectInformation(subject);
+            subject = subject.title;
             const subjectQuestions = await QuestionModel.find({underSubject: subject}); 
             const length = subjectQuestions.length;
             for (let i = 0; i < 3; i++)
@@ -284,7 +293,6 @@ module.exports.removeTest = (testId)=>{
  *  just follow regular procedure, create a temporary object that stores the questions information, then save to the database.
  */
 module.exports.modify = (userId, testId, title, desc, subject, questions)=>{
-    console.log("this was called atleast");
     return new Promise(async (resolve, reject)=>{
         try {
             // first get information regarding the test selected

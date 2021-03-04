@@ -1,8 +1,9 @@
 const subjectSelector = document.querySelector("#subjectContainer");
-function tempOption(value) {
+function tempOption(value, id) {
     const temp = document.createElement("option");
     temp.setAttribute("value", value);
     temp.innerText = value;
+    temp.setAttribute("name", id);
     subjectSelector.appendChild(temp);
 }
 let questionsNeeded = 1;
@@ -27,7 +28,8 @@ fetch("/getSubjects")
 .then((r)=>{
     if (r) {
         for (const subject of r) {
-            tempOption(subject.title);
+            console.log(subject);
+            tempOption(subject.title, subject._id);
         }
     } else {
         // set defaults
@@ -219,7 +221,8 @@ function doneOreditClicked(obj, isDone) {
                     add: isDone,
                     title: testTitle,
                     desc: testDesc,
-                    subject: testSubject,
+                    // setting the subject to the selected subjects id
+                    subject: subjectSelector.querySelector("[value='"+subjectSelector.value+"']").getAttribute("name"),
                     questions: result 
                 })
             })
