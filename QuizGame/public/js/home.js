@@ -1,5 +1,26 @@
 const testContainer = document.querySelector("#tests"); 
 
+const firstCol = document.querySelector("#firstColumn");
+const secondCol = document.querySelector("#secondColumn");
+const thirdCol = document.querySelector("#thirdColumn");
+
+function appendToCol(index, item) {
+    switch(index){
+        case 0:
+            firstCol.appendChild(item);
+            break;
+        case 1:
+            secondCol.appendChild(item);
+            break;
+        case 2:
+            thirdCol.appendChild(item);
+            break;
+        default:
+            console.log("This was not supposed to happen");
+            break;
+    }
+}
+
 const testSection = document.querySelector("#testSection");
 // on load, get all the tests that belong to the user
 let tests = [];
@@ -10,11 +31,11 @@ fetch("/getTestInformation")
     console.log(r);
     tests = r;
     if (tests) {
+        let index = 0;
         for (const test of tests) {
             const form = document.createElement("form");
             form.setAttribute("action", "/test");
             form.setAttribute("method", "post");
-            form.classList.add("indivContainer");
             form.setAttribute("name", test._id);
             // to store temp information
             const input = document.createElement("input");
@@ -47,7 +68,8 @@ fetch("/getTestInformation")
             form.appendChild(div);
             // push the form onto the array, so I can move the items around with ease. 
             testsContainers.push(form);
-            testSection.appendChild(form);
+            const colIndex = index % 3;
+            appendToCol(colIndex, form);
             //////// TODO LEFT OFF: finish sorting... now you can move the forms around.
 
             deleteButton.addEventListener("click", function(){
@@ -66,7 +88,14 @@ fetch("/getTestInformation")
                 .then((r)=>{
                     if (r.result) {
                         // did good, so remove from test section
-                        testContainer.removeChild(this.parentElement);
+                        this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+                        for (const t in tests) {
+                            const curr = tests[t];
+                            if (curr._id == test._id) {
+                                tests.splice(t, 1);
+                                testsContainers.splice(t, 1);
+                            }
+                        }
                     }
                     else {
                         alert("We could not remove this.");
@@ -76,7 +105,7 @@ fetch("/getTestInformation")
                     console.error(e);
                 })
             });
-
+            index++;
         }
     } else {
         document.querySelector("#testMessage").classList.remove("hidden");
@@ -86,10 +115,61 @@ fetch("/getTestInformation")
     console.error(e);
 })
 
+/*
+When sorting by subject, we are going to create containers, and we are going to fill each
+container with tests under x subject.
+*/
+let stuff = {};
 function subjectSort() {
+    let index = 0;
+    for (const test in tests) {
+        const curr = tests[test];
+        const subject = curr.subject;
+        if (stuff[subject]) {
+            stuff[subject].appendChild(testsContainers[test]);
+        } else {
+            const div = document.createElement("div");
+            div.classList.add("subjectSort");
+            const h2 = document.createElement("h2");
+            h2.innerText = subject;
+            div.appendChild(h2);
+            div.appendChild(testsContainers[test]);
+            appendToCol(index%3, div);
+            stuff[subject] = div;
+            index++;
+        }
+    }
+}
+
+function defaultSort() {
+    // go through each, pop them out to the parents parent container,
+    // and remove the current parentn's containers from existence (hide)
+    let index = 0;
+    for (const key in stuff) {
+        for (const item of stuff[key].querySelectorAll(".indivContainer")) {
+            const parentElement = item.parentElement.parentElement.parentElement;
+            if (parentElement) {
+                parentElement.removeChild(item.parentElement.parentElement);
+            }
+            // item.parentElement.parentElement.parentElement.appendChild(item);
+            appendToCol(index % 3, testsContainers[index]);
+            index++;
+        }
+    }
+    stuff = {}
 }
 
 const sortingMethod = document.querySelector("#sortingMethod");
 sortingMethod.addEventListener("change", function(){
-
+    switch(sortingMethod.value) {
+        case "subject":
+            subjectSort();
+            break;
+        case "default":
+            defaultSort();
+            break;
+        default:
+            console.log("Well.. this is awkward");
+            break;
+    }
 });

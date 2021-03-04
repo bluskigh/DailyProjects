@@ -76,5 +76,20 @@ b
 {
     background: #B1D4E0;
     color: #0C1446;
-    padding: 0 .5em;j
+    padding: 0 .5em;
+}
+#testSection
+{
+    display: flex;
+    flex-direction: row;
+}
+.subjectSort
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: gray;
+    padding: .3em;
+    margin: .5em;
 }
