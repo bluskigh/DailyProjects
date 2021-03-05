@@ -28,7 +28,7 @@
                 <section id="testInformation">
                     <h1><%=testInfo.title%></h1>
                     <p><%=testInfo.desc%></p>
-                    <b><%=testInfo.subject%></b>
+                    <b style="background-color:<%=testInfo.subject.color%>"><%=testInfo.subject.title%></b>
                     <form action="/editTest" method="GET">
                         <input type="text" name="testId" value="<%=testInfo._id%>" class="hidden">
                         <button type="submit" id="editTest">Edit</button>

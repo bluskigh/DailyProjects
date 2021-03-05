@@ -137,7 +137,7 @@ module.exports.getSubjectInformation = (subjectId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
             const result = await SubjectModel.findOne({_id: subjectId});
-            resolve({title: result.title, color: result.color});
+            resolve(result);
         } catch(e) {
             reject(e);
         }

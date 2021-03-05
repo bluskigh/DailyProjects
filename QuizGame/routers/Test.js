@@ -17,7 +17,7 @@ const verifyAction = (req, res, next)=>{
 };
 router.get("/home", (req, res)=>{
     if(req.session.userId) {
-        TestModel.getTests(req.session.userId)
+        TestModel.getAllTests(req.session.userId)
         .then((r)=>{
             res.render("home", {title: "Home", username: req.session.username, stylesheets: null, tests: r});
         })
@@ -76,7 +76,7 @@ router.post("/test", verifyAction, (req, res)=>{
 });
 router.get("/getTestInformation", verifyAction, (req, res)=>{
     // returns all the test correlated with the user
-    TestModel.getTests(req.session.userId)
+    TestModel.getAllTests(req.session.userId)
     .then((r)=>{
         res.json(r);
     })

@@ -49,7 +49,6 @@ fetch("/getTestInformation")
             const button = document.createElement("button");
             const bold = document.createElement("b");
             console.log(test.subject);
-            console.log(test.subject.title)
             bold.innerText = test.subject.title;
             bold.style.backgroundColor = test.subject.color;
             const testInfoDiv = document.createElement("div");

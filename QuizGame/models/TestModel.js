@@ -28,18 +28,29 @@ const QuestionSchema = new mongoose.Schema({
     }
 });
 const QuestionModel = new mongoose.model("Question", QuestionSchema); 
+/////////////////// End of schemas and models
 
-const getTests = (userId)=>{
+
+////// Start of modules.exports && methods
+/*
+ * Returns back an array of objects or null.
+ * If object is returned back then you have an array of
+ * available test with their related information.
+ * All tests that are connect to the current user (userId parameter)
+ */
+// getTests
+const getAllTests = (userId)=>{
     return new Promise(async (resolve, reject)=>{
         try {
             let results = await TestModel.find({userId});
             if (results.length >= 1) {
                 let index = 0;
-                for (var result of results) {
-                    var temp = await UserModel.getSubjectInformation(result.subject);
-                    result.subject = temp;
+                for (let result of results) {
+                    result = await getTestInfo(result._id); 
+                    results[index] = result;
                     index++;
                 } 
+                console.log(results);
                 resolve(results);
             }
             resolve(false);
@@ -48,10 +59,6 @@ const getTests = (userId)=>{
         }
     });
 }
-/////////////////// End of schemas and models
-
-////// Start of modules.exports && methods
-module.exports.getTests = getTests;
 
 let allQuestions = null;
 QuestionModel.find({})
@@ -130,20 +137,25 @@ function getPossibleAnswers (answer, subject) {
 } 
 
 /*
- * Locates the Test which contains the given testId, and userId
- * Returns back an object of the query.
- * Possible outcomes: Object{information}, null
+ * Returns back an object or null.
+ * If object is returned, then information on the test is given (title, desc, subject);
+ * Does not return back the questions/possible_answers related to the test. 
  */
-function getTestInfo(testId, userId) {
+const getTestInfo = (testId) => {
     return new Promise(async (resolve, reject)=>{
         try {
-            const result = await TestModel.findOne({_id: testId, userId: userId});
-            resolve(result);
+            // getting the data related to test itself (title,desc,subject)
+            let data = await TestModel.findOne({_id: testId});
+            // since the subject of a test stores the id of a subject, we are going to retrieve the info of thus subject. 
+            let temp = await UserModel.getSubjectInformation(data.subject);
+            data.subject = temp;
+            resolve(data);
         } catch(e) {
             reject(e);
         }
     });
 }
+
 /*
  * Given a testId, each question will contain a variable which references to the test that it is under.
  * What this method does is, iterate through all the questions which are under the given test.
@@ -360,3 +372,4 @@ module.exports.isSubjectValid = (subject) => {
 };
 // for general operations such as: find(), exists()
 module.exports.model = TestModel;
+module.exports.getAllTests = getAllTests;
