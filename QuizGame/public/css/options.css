@@ -11,6 +11,16 @@
     margin: 0;
 }
 
+#addMore
+{
+    color: black;
+}
+#addMore:hover
+{
+    background: white;
+    box-shadow: 0em 0em 1em black;
+}
+
 .bubble
 {
     width: fit-content;
@@ -24,11 +34,16 @@
     box-shadow: 0em 0em .7em white;
 }
 
-#subjectsContainer
+#subject
 {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+#subjectsContainer
+{
 }
 
 #message
@@ -48,4 +63,12 @@
 {
     margin: 0;
     padding: 0;
+}
+#subjects
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
 }

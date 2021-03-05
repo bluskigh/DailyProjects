@@ -9,17 +9,20 @@ input[type=radio]:hover
 #testInformation
 {
     margin: 0 auto;
-    width: 50%;
+    width: 100%;
 }
+
 #questions
 {
     margin: 0 auto;
-    width: 50%;
+    width: 100%;
 }
+
 .questionContainer:nth-child(even)
 {
     background: gray;
 }
+
 .questionContainer:nth-child(odd)
 {
     background: transparent;

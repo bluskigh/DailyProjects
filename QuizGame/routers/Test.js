@@ -78,6 +78,7 @@ router.get("/getTestInformation", verifyAction, (req, res)=>{
     // returns all the test correlated with the user
     TestModel.getAllTests(req.session.userId)
     .then((r)=>{
+        console.log(r);
         res.json(r);
     })
     .catch((e)=>{

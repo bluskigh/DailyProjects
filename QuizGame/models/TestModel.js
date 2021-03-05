@@ -50,7 +50,6 @@ const getAllTests = (userId)=>{
                     results[index] = result;
                     index++;
                 } 
-                console.log(results);
                 resolve(results);
             }
             resolve(false);

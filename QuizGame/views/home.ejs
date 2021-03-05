@@ -1,12 +1,14 @@
 <%- include("partials/header") %>
-        <h1>Tests</h1>
-        <section id="tests">
+        <section id="testsHeader">
+            <h1>Tests</h1>
             <select name="sorting" id="sortingMethod">
-                <option value="" selected disabled >Sorting Method</option>
-                <option value="subject">Subject</option>
-                <option value="default">Default</option>
+                    <option value="" selected disabled >Sorting Method</option>
+                    <option value="subject">Subject</option>
+                    <option value="default">Default</option>
             </select>
-            <section id="testSection">
+        </section>
+        <section id="tests">
+                <section id="testSection">
                 <section id="firstColumn"></section>
                 <section id="secondColumn"></section>
                 <section id="thirdColumn"></section>
@@ -14,7 +16,7 @@
             <h3 id="testMessage" class="hidden">You do not have any tests.</h3>
         </section>
 
-        <form action="/addTest">
+        <form id="addTest" action="/addTest">
             <button>Add Test</button>
         </form>
     </main>

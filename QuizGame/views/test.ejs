@@ -26,7 +26,7 @@
                 <% } %>
             <% } else { %>
                 <section id="testInformation">
-                    <h1><%=testInfo.title%></h1>
+                    <h1 class="testTitle"><%=testInfo.title%></h1>
                     <p><%=testInfo.desc%></p>
                     <b style="background-color:<%=testInfo.subject.color%>"><%=testInfo.subject.title%></b>
                     <form action="/editTest" method="GET">
