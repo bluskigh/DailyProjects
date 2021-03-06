@@ -25,6 +25,7 @@ const testSection = document.querySelector("#testSection");
 // on load, get all the tests that belong to the user
 let tests = [];
 let testsContainers = [];
+let deletePressed = false;
 fetch("/getTestInformation")
 .then(async (r) => await r.json())
 .then((r)=>{
@@ -38,6 +39,10 @@ fetch("/getTestInformation")
                 form.setAttribute("action", "/test");
                 form.setAttribute("method", "post");
                 form.setAttribute("name", test._id);
+                form.addEventListener("submit", function(e){
+                    if (deletePressed)
+                        e.preventDefault();
+                });
                 // to store temp information
                 const input = document.createElement("input");
                 input.setAttribute("type", "text");
@@ -94,6 +99,7 @@ fetch("/getTestInformation")
                 deleteButton.addEventListener("click", function(){
                     // get the current test id
                     // send fetch request to delete this test
+                    deletePressed = true;
                     fetch("/deleteTest", {
                         method: "POST",
                         headers: new Headers({
@@ -107,7 +113,7 @@ fetch("/getTestInformation")
                     .then((r)=>{
                         if (r.result) {
                             // did good, so remove from test section
-                            this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement);
+                            this.parentElement.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement.parentElement);
                             for (const t in tests) {
                                 const curr = tests[t];
                                 if (curr._id == test._id) {
@@ -115,6 +121,7 @@ fetch("/getTestInformation")
                                     testsContainers.splice(t, 1);
                                 }
                             }
+                            deletePressed = false;
                         }
                         else {
                             alert("We could not remove this.");
@@ -171,18 +178,15 @@ function defaultSort() {
     // go through each, pop them out to the parents parent container,
     // and remove the current parentn's containers from existence (hide)
     let index = 0;
-    for (const key in stuff) {
-        const current = stuff[key];
-        const query = current.querySelectorAll(".bubble");
-        for (const q of query) {
-
-            if (current.parentElement)
-                current.parentElement.removeChild(current);
-            appendToCol(index % 3, q);
-            index++;
-        }
+    for (const thing in stuff) {
+        stuff[thing].parentElement.removeChild(stuff[thing]);
     }
-    stuff = {}
+    for (const test of testsContainers) {
+        appendToCol(index % 3, test);
+        index++;
+    }
+
+    stuff = {};
 }
 
 const sortingMethod = document.querySelector("#sortingMethod");

@@ -219,6 +219,7 @@ module.exports.getIndividualInfo = (userId, testId)=>{
         }
     });
 };
+module.exports.getTestInfo = getTestInfo;
 
 /*
  * Given userId, title, desc, subject, questions.

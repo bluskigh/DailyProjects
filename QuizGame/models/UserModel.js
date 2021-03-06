@@ -5,6 +5,7 @@
  * stored here.
  */
 const bcrypt = require("bcrypt");
+const TestModel = require("./TestModel");
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/quizGame")
     .then(r=>{console.log("Connected to database")})
@@ -69,8 +70,7 @@ module.exports.signUp = (username, password)=>{
             const temp = new UserModel({username, password});
             await temp.save();
             // add default subjects
-            await SubjectModel.insertMany([{userId: temp._id, title: "Math", color: "#cc66ff"}, {userId: temp._id, title: "English", color: "#00ffcc"}, {userId: temp._id, title: "Computer", color: "#3333ff"}, {userId: temp._id, title: "Science", color: "#36c9ba"}]);
-            resolve({username, id: temp._id});
+            const data = await SubjectModel.insertMany([{userId: temp._id, title: "Math", color: "#cc66ff"}, {userId: temp._id, title: "English", color: "#00ffcc"}, {userId: temp._id, title: "Computer", color: "#3333ff"}, {userId: temp._id, title: "Science", color: "#36c9ba"}]);
         } catch(e) {
             reject(e);
         }

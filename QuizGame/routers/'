@@ -19,7 +19,7 @@ router.get("/home", (req, res)=>{
     if(req.session.userId) {
         TestModel.getAllTests(req.session.userId)
         .then((r)=>{
-            res.render("home", {title: "Home", username: req.session.username, stylesheets: ["css/home.css"], tests: r});
+            res.render("home", {title: "Home", username: req.session.username, stylesheets: null, tests: r});
         })
         .catch(e=>{throw e});
     }
@@ -146,15 +146,18 @@ router.post("/testSubmitted", async (req, res)=>{
         const data = await TestModel.getTestInfo(testId);
         if (!data)
             return
+
         let questions = [];
+
         // currentPossibles is an object that contains arrays (jagged) each array in the array, is part of question x (x = index)
+
         // skip over the first key, since that is currentPossibles
-        const keys = Object.keys(req.body);
+        const keys = Object.keys(req.query);
         let correct = 0;
         let total = keys.length;
-        for (let i = 3; i < total; i++) {
+        for (let i = 2; i < total; i++) {
             console.log("This is running");
-            let picked = parseInt(req.body[keys[i]]);
+            let picked = parseInt(req.query[keys[i]]);
             console.log(picked);
             let isCorrect = true;
             if (picked > 0) {
@@ -167,15 +170,14 @@ router.post("/testSubmitted", async (req, res)=>{
             }
             picked = picked % 10;
             // pcked is going to to be an index, on the actual page, out of the currentPossibles, just make picked index equal to either red or green, depending on whether I got it right
-            console.log(currentPossibles);
-            questions.push({question: keys[i], answer: Array.isArray(answer) ? answer[i-3] : answer, picked, possibles: Array.isArray(currentPossibles) ? currentPossibles[i-3].split(",") : currentPossibles.split(','), correct: isCorrect});
+            questions.push({question: keys[i], answer: answer[i-2], picked, currentPossibles: currentPossibles[i-2].split(","), correct: isCorrect});
         }
 
         console.log(questions);
 
-        // equation to get the percentage.
-        correct = Math.floor((correct/(total-3)) * 100);
+        correct = Math.floor((correct/total) * 100);
         res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions, score: correct, testInfo: data});
+
     } catch(e) { 
         console.error(e);
         throw e;

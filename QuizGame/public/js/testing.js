@@ -1,13 +1,20 @@
 const questions = document.querySelectorAll(".question");
 const questionsLength = questions.length; 
 const resultContainer = document.querySelector("#result"); 
+const subject = document.querySelector("#subject");
 
-let answered = new Array(questionsLength);
 for (const question of questions) {
-    console.log(question.children);
+    const container = question.querySelectorAll(".questionContainer");
+    for (const indiv of container) {
+        indiv.addEventListener("mouseover", function(){
+            indiv.style = subject.getAttribute("style");
+        });
+        indiv.addEventListener("mouseleave", function(){
+            // null removes it and uses the old background color
+            indiv.style.backgroundColor = null;
+        });
+    }
 }
-
-let correct = 0;
 
 function disableRadios() {
     console.log(questionsLength);
@@ -20,41 +27,6 @@ function disableRadios() {
     }
 }
 
-const submitButton = document.querySelector("#submit");
-submitButton.addEventListener("click", function(){
-    for (const index in questions) {
-        const selected = questions[index];
-        try  {
-            if (selected.getAttribute("name") != '1') {
-                alert("you did not select an option for question: " + index);
-                return;
-            }
-        } catch(e) {
-            // ignore it, some dumb bug
-        }
-    }
-
-    let correct = 0;
-    for (const question of questions) {
-        if (question.getAttribute("correct") == "true") {
-            correct++;
-        }
-    }
-
-    this.disabled = true;
-    disableRadios();
-    
-    const finalScore = (correct / questionsLength) * 100;
-    resultContainer.classList.toggle("hidden");
-    resultContainer.children[0].innerText = "Grade: " +  finalScore;
-});
-
-const takeAgain = document.querySelector("#takeAgain");
-takeAgain.addEventListener("click", function(){
-    // reload the page
-    window.location.reload(true);
-});
-
 function selected(obj) {
     if (obj.parentElement.getAttribute("name") == "true")
         obj.parentElement.parentElement.setAttribute("correct", true);
@@ -63,5 +35,3 @@ function selected(obj) {
     }
     obj.parentElement.parentElement.setAttribute("name", "1");
 }
-
-const editButton = document.querySelector("#ediitButton");

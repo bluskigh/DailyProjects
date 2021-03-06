@@ -18,11 +18,7 @@ form
     margin: 0;
     background: transparent;
 }
-.hidden
-{
-    visibility: hidden;
-    display: none;
-}
+
 a:hover
 {
     cursor: pointer;
@@ -202,6 +198,10 @@ a:hover
     flex-direction: column;
     margin: 0;
     padding: 0;
+}
+.mainbutton:focus
+{
+    outline: none;
 }
 .deleteButton:hover
 {

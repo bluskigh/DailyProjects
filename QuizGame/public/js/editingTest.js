@@ -135,6 +135,8 @@ const getQuestions = ()=>{
             for (const question of r) {
                 generateQuestion(question._id, question.question, question.answer);
             }
+
+            generateQuestion();
         })
         .catch((e)=>{
             console.log("There seems to be an error", e);
@@ -257,6 +259,3 @@ if (editButton) {
         doneOreditClicked(this, false);
     });
 }
-
-// onload, generate a question
-generateQuestion();

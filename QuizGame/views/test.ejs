@@ -20,15 +20,17 @@
                 </div>
                 <button id="addQuestion">Add Question</button>
                 <% if (creating && testInfo) { %>
-                    <button id="edit">Edit</button>
+                    <button id="done">Edit</button>
                 <% } else { %>
                     <button id="done">Done</button>
                 <% } %>
+        </section>
             <% } else { %>
-                <section id="testInformation">
+                <section id="testInformation" name="<%=testInfo._id%>">
+                    <b id="subject" style="background-color:<%=testInfo.subject.color%>"><%=testInfo.subject.title%></b>
                     <h1 class="testTitle"><%=testInfo.title%></h1>
                     <p><%=testInfo.desc%></p>
-                    <b style="background-color:<%=testInfo.subject.color%>"><%=testInfo.subject.title%></b>
+                    <!-- THIS LINE CHANGED FROM GET TO POST THEN TO GET -->
                     <form action="/editTest" method="GET">
                         <input type="text" name="testId" value="<%=testInfo._id%>" class="hidden">
                         <button type="submit" id="editTest">Edit</button>
@@ -36,24 +38,28 @@
                 </section>
                 <section id="questions">
                     <!-- here display all the questions and answeres -->
-                    <% for (const question of questions) { %>
-                        <div class="question" name='0'>
-                            <h2>Q) <%=question.question%></h2>
-                            <!-- generate the available question-->
-                            <% for (const p in question.possible) { %>
-                                <div class="questionContainer" name="<%=true ? question.possible[p] == question.answer: false%>">
-                                    <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%><%=question.question%>" onclick="selected(this)"> 
-                                    <label class="possibleLabel" for="<%=question.possible[p]%><%=question.question%>"><%=question.possible[p]%></label>
-                                </div>
-                            <% } %>
-                        </div>
-                    <% } %>
+                    <form action="/testSubmitted" method="POST">
+                        <input type="text" class="hidden" name="testId" value="<%=testInfo._id%>">
+                        <!-- ERROR HERE, when clicked somethign about selected nto defined? -->
+                        <% for (const question of questions) { %>
+                            <div class="question" name='0'>
+                                <h2>Q) <%=question.question%></h2>
+                                <!-- generate the available question-->
+                                <input type="text" class="hidden" name="currentPossibles" value="<%=question.possible%>">
+                                <input type="text" class="hidden" name="answer" value="<%=question.answer%>">
+                                <% for (const p in question.possible) { %>
+                                    <div class="questionContainer">
+                                        <!-- BIG BRUG MOMENT: instead of trying to use fetch and fancy javascript, to pass in information of the test, all I had to do is provide a value for the radio button, that wasy in the script, I can simply say... if true add to correct else do not... etc.-->
+                                        <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%><%=question.question%>" value="<%=question.possible[p] != question.answer ? '-1' : '1'%><%=p%>" onclick="selected(this)"> 
+                                        <label class="possibleLabel" for="<%=question.possible[p]%><%=question.question%>"><%=question.possible[p]%></label>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
 
-                    <button id="submit">Submit</button>
-                    <section id="result" class="hidden">
-                        <h1 id="score">Score: </h1>
-                        <button id="takeAgain">Take Again?</button>
-                    </section>
+                        <button id="submitButton">Submit</button>
+                    </form>
+
                 </section>
             <% } %>
         </section>

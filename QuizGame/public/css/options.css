@@ -1,3 +1,7 @@
+main
+{
+    width: 50%;
+}
 #addSubjectForm 
 {
     padding: 1em;
@@ -38,19 +42,15 @@
 {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    width: 50%;
-}
-
-#subjectsContainer
-{
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
 }
 
 #message
 {
     top: 0;
     position: absolute;
-    width: 100%;
     background: rgba(0, 150, 150, 0.645);
     display: flex;
     flex-direction: column;
