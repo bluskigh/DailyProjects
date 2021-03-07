@@ -16,7 +16,7 @@ module.exports.addScore = (testInfo, questions, score, userId) => {
     return new Promise(async (resolve, reject)=>{
         try {
             const temp = new ScoreModel({title: testInfo.title, desc: testInfo.desc, subject: testInfo.subject, 
-                score, questions: questions, testId: testInfo._id, userId}); 
+                score, questions: questions, testId: testInfo._id, userId, testId: testInfo._id}); 
             await temp.save();
             resolve(temp._id);
         } catch(e) {
@@ -42,6 +42,22 @@ module.exports.getAllScores = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             resolve(await ScoreModel.find({userId})); 
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.getScoreInfo = (scoreId) => {
+    return new Promise(async (resolve, reject)=>{
+        try {
+            let result = await ScoreModel.findOne({_id: scoreId});
+            if (!result)
+                resolve(false);
+
+            console.log(result);
+
+            resolve(result);
+
         } catch(e) {
             reject(e);
         }

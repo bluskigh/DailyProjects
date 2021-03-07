@@ -34,6 +34,7 @@ router.get("/addTest", verifyAction, (req, res)=>{
 });
 router.post("/modifyTest", (req, res)=>{
     const { add, title, desc, subject, questions, testId } = req.body;
+    console.log("The subejct: ", subject);
     if (add) {
         TestModel.addTest(req.session.userId, title, desc, subject, questions)
         .then((r)=>{
@@ -180,7 +181,8 @@ router.post("/testSubmitted", async (req, res)=>{
             throw new ApplicationError("Could not add the score!", 404);
 
         // HERE add to the ScoreModel
-        res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions, score: correct, testInfo});
+        // res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions, score: correct, testInfo});
+        res.redirect("/scores");
 
     } catch(e) { 
         console.error(e);

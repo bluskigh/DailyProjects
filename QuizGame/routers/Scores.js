@@ -20,4 +20,23 @@ router.get("/scores", verifyAction, (req, res)=>{
     })
 });
 
+router.post("/score", verifyAction, (req, res)=>{
+    const { scoreId } = req.body;
+    console.log(scoreId);
+    // get the information regarding the score
+    // then render it.
+    ScoreModel.getScoreInfo(scoreId)
+    .then((r)=>{
+        res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions: r.questions, score: r.score, testInfo: {
+            title: r.title,
+            desc: r.desc,
+            subject: r.subject,
+            _id: r.testId
+        }});
+    })
+    .catch((e)=>{
+        throw e;
+    })
+});
+
 module.exports = router;

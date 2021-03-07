@@ -97,14 +97,12 @@ function isIn(array, target){
  *   ---- then skip... find another answer
  * Finally, insert the actual answer in the possibleAnswers array.
  */
-function getPossibleAnswers (answer, subject) {
+function getPossibleAnswers (answer, underSubject) {
     return new Promise(async (resolve, reject)=>{
         try {
             let possibleAnswers = [];
             let randIndex = null;
-            subject = await UserModel.getSubjectInformation(subject);
-            subject = subject.title;
-            const subjectQuestions = await QuestionModel.find({underSubject: subject}); 
+            const subjectQuestions = await QuestionModel.find({underSubject}); 
             const length = subjectQuestions.length;
             for (let i = 0; i < 3; i++)
             {
@@ -146,8 +144,8 @@ const getTestInfo = (testId) => {
             // getting the data related to test itself (title,desc,subject)
             let data = await TestModel.findOne({_id: testId});
             // since the subject of a test stores the id of a subject, we are going to retrieve the info of thus subject. 
-            let temp = await UserModel.getSubjectInformation(data.subject);
-            data.subject = temp;
+            // let temp = await UserModel.getSubjectInformation(data.subject);
+            // data.subject = temp;
             resolve(data);
         } catch(e) {
             reject(e);
@@ -176,7 +174,7 @@ function getTestQuestions(testId, subject) {
             let result = [];
             for (let question of questions)
             {
-                const possible = await getPossibleAnswers(question.answer, subject);
+                const possible = await getPossibleAnswers(question.answer, subject.title);
                 question.possible = possible;
                 result.push(question);
             }
@@ -212,7 +210,9 @@ module.exports.getIndividualInfo = (userId, testId)=>{
         try {
             // const testInfo = await TestModel.findOne({_id: testId, userId: userId});
             const testInfo = await getTestInfo(testId, userId);
+            console.log("Test info: ", testInfo);
             const result = await getTestQuestions(testId, testInfo.subject);
+            console.log("result: ", result);
             resolve([testInfo, result]);
         } catch(e) {
             reject(e);
@@ -235,8 +235,9 @@ module.exports.getTestInfo = getTestInfo;
 module.exports.addTest = (userId, title, desc, subject, questions)=>{
     return new Promise(async (resolve, reject)=>{
         try {
+            const subjectInfo = await UserModel.getSubjectInformation(subject);
             // store information in object
-            const temp = new TestModel({userId, title, desc, subject});
+            const temp = new TestModel({userId, title, desc, subject: subjectInfo});
             // save the object to the Test collection.
             await temp.save();
             // iterate through each question, assigning the _id of the newly created object created above.
