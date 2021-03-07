@@ -9,6 +9,8 @@ body
 h1
 {
     font-size: 3em;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 nav

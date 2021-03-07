@@ -20,7 +20,10 @@ router.get("/home", (req, res)=>{
     if(req.session.userId) {
         TestModel.getAllTests(req.session.userId)
         .then((r)=>{
-            res.render("home", {title: "Home", username: req.session.username, stylesheets: ["css/home.css"], tests: r});
+            ScoreModel.getRecent(req.session.userId)
+            .then((s)=>{
+                res.render("home", {title: "Home", username: req.session.username, stylesheets: ["css/home.css", "css/scores.css"], tests: r, scores: s});
+            })
         })
         .catch(e=>{throw e});
     }
@@ -34,7 +37,6 @@ router.get("/addTest", verifyAction, (req, res)=>{
 });
 router.post("/modifyTest", (req, res)=>{
     const { add, title, desc, subject, questions, testId } = req.body;
-    console.log("The subejct: ", subject);
     if (add) {
         TestModel.addTest(req.session.userId, title, desc, subject, questions)
         .then((r)=>{
@@ -60,9 +62,7 @@ router.post("/modifyTest", (req, res)=>{
         }
     }
 });
-router.post("/updateQuestion", (req, res)=>{
-    const { question, answer } = req.body;
-});
+
 router.post("/test", verifyAction, (req, res)=>{
     const {testId } = req.body;
     // get testid informatin, send to the test page
@@ -76,17 +76,19 @@ router.post("/test", verifyAction, (req, res)=>{
     });
     // provide data
 });
+
+// mostly used in fetch request
 router.get("/getTestInformation", verifyAction, (req, res)=>{
     // returns all the test correlated with the user
     TestModel.getAllTests(req.session.userId)
     .then((r)=>{
-        console.log(r);
         res.json(r);
     })
     .catch((e)=>{
         throw e;
     })
 });
+
 router.post("/deleteTest", verifyAction, (req, res)=>{
     const { testId } = req.body;
     if (testId) {
@@ -124,11 +126,6 @@ router.get("/getQuestions/:testId", (req, res)=>{
     })
 });
 
-router.post("/editTest", (req, res)=>{
-    const { testId, testInfo, questions } = req.body; 
-    res.send("still working on this functionality");
-});
-
 router.get("/isSubjectValid/:subject", (req, res)=>{
     const { subject } = req.params;
     TestModel.isSubjectValid(subject)
@@ -155,12 +152,9 @@ router.post("/testSubmitted", async (req, res)=>{
         let correct = 0;
         let total = keys.length;
         for (let i = 3; i < total; i++) {
-            console.log("This is running");
             let picked = parseInt(req.body[keys[i]]);
-            console.log(picked);
             let isCorrect = true;
             if (picked > 0) {
-                console.log("You got it correct, ", picked);
                 ++correct;
             } else {
                 isCorrect = false;
@@ -169,7 +163,6 @@ router.post("/testSubmitted", async (req, res)=>{
             }
             picked = picked % 10;
             // pcked is going to to be an index, on the actual page, out of the currentPossibles, just make picked index equal to either red or green, depending on whether I got it right
-            console.log(currentPossibles);
             questions.push({question: keys[i], answer: Array.isArray(answer) ? answer[i-3] : answer, picked, possibles: Array.isArray(currentPossibles) ? currentPossibles[i-3].split(",") : currentPossibles.split(','), correct: isCorrect});
         }
 

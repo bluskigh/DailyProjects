@@ -22,7 +22,6 @@ router.get("/scores", verifyAction, (req, res)=>{
 
 router.post("/score", verifyAction, (req, res)=>{
     const { scoreId } = req.body;
-    console.log(scoreId);
     // get the information regarding the score
     // then render it.
     ScoreModel.getScoreInfo(scoreId)

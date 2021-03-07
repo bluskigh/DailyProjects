@@ -25,6 +25,7 @@ router.post("/addSubject", verifyAttempt, (req, res)=>{
         throw e;
     })
 });
+
 router.get("/getSubjects", (req, res)=>{
     UserModel.getSubjects(req.session.userId)
     .then((r)=>{
@@ -37,6 +38,7 @@ router.get("/getSubjects", (req, res)=>{
         throw e;
     })
 });
+
 router.post("/deleteSubject", (req, res)=>{
     const { subjectId } = req.body;
     console.log(subjectId);

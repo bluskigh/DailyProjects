@@ -22,7 +22,7 @@ app.get("/", (req, res)=>{
     if (req.session.userId)
         res.redirect("/home");
     else
-        res.render("index", {title: "Home", username: null, stylesheets:null});
+        res.render("index", {title: "Home", username: null, stylesheets:["css/index.css"]});
 });
 
 app.get("/signout", (req, res)=>{

@@ -218,3 +218,32 @@ a:hover
 .bubbleTestInfo .testInfo p
 {
 }
+
+#addTest button
+{
+    width: 100%;
+}
+
+#scoresContainer
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+#scoresContainer .scoreResult
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+#scoresContainer .score
+{
+    margin-top: 0;
+    padding-top: 0;
+} 
+#scoresContainer h1
+{
+    font-size: 3em;
+}

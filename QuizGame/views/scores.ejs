@@ -1,23 +1,5 @@
 <%-include("partials/header")%>
-        <% for (const score of scores) { %>
-            <form action="/score" method="POST">
-                <button name="scoreId" value="<%=score._id%>">
-                    <section class="scoreContainer">
-                        <section class="scoreResult">
-                            <div>
-                                <h1 class="testTitle"><%=score.title%></h1>
-                                <p><%=score.desc%></p>
-                            </div>
-                            <div>
-                                <h1 class="score" style="-webkit-text-stroke: 1px <%=score.score > 70 ? 'green' : 'darkred'%>"><%=score.score%>%</h1>
-                            </div>
-                        </section>
-                        <hr>
-                    </section>
-
-                </button>
-            </form>
-        <% } %>
+<%-include("partials/scoreTemplate")%>
     </main>
     <script src="js/scores.js"></script>
 </body>

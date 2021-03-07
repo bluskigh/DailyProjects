@@ -8,7 +8,11 @@ const ScoreSchema = new mongoose.Schema({
     score: Number,
     questions: [Object],
     testId: String,
-    userId: String
+    userId: String,
+    created: {
+        type: Date,
+        default: Date.now
+    }
 });
 const ScoreModel = new mongoose.model("Score", ScoreSchema);
 
@@ -28,7 +32,6 @@ module.exports.removeScore = (scoreId) => {
     return new Promise(async (resolve, reject) => {
         try {
             const result = await ScoreModel.deleteOne({_id: scoreId, userId});
-            console.log("the result of deleting: ", result);
             if (result)
                 resolve(true);
             else
@@ -54,10 +57,18 @@ module.exports.getScoreInfo = (scoreId) => {
             if (!result)
                 resolve(false);
 
-            console.log(result);
-
             resolve(result);
 
+        } catch(e) {
+            reject(e);
+        }
+    });
+};
+module.exports.getRecent = (userId) => {
+    return new Promise(async (resolve, reject)=>{
+        try {
+            const result = await ScoreModel.find({userId});
+            resolve(result.splice(result.length - 4));
         } catch(e) {
             reject(e);
         }

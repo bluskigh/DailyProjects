@@ -210,9 +210,7 @@ module.exports.getIndividualInfo = (userId, testId)=>{
         try {
             // const testInfo = await TestModel.findOne({_id: testId, userId: userId});
             const testInfo = await getTestInfo(testId, userId);
-            console.log("Test info: ", testInfo);
             const result = await getTestQuestions(testId, testInfo.subject);
-            console.log("result: ", result);
             resolve([testInfo, result]);
         } catch(e) {
             reject(e);
