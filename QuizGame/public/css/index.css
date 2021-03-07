@@ -54,7 +54,7 @@ h1
 }
 #capabilitiesContainer
 {
-    padding: 2em 0;
+    padding: 4em 0;
     text-align: center;
     background: rgb(235, 228, 228);
     color: black;
@@ -80,6 +80,7 @@ h1
 
 #whyContainer
 {
+    padding: 4em 0;
     margin: 0 auto;
     width: 70%;
     display: flex;
@@ -96,6 +97,123 @@ h1
 }
 #whyContainer img
 {
-    width: 600px;
     height: 300px;
+}
+
+#techContainer
+{
+    padding: 4em 0;
+    background: rgb(235, 228, 228);
+    color: black;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#tech
+{
+    display: flex;
+    flex-direction: row;
+}
+#techContainer img
+{
+    height: 200px;
+}
+
+footer
+{
+    position: relative;
+    height: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#footerContainer
+{
+    padding: 0 5em;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+#backImage
+{
+    filter: grayscale(20%);
+    opacity: 50%;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+}
+#footerContainer h3, aside
+{
+    z-index: 103;
+}
+#footerContainer img:nth-child(1)
+{
+    filter: invert(100%);
+}
+#footerContainer img:nth-child(even)
+{
+    height: 75px;
+}
+#footerContainer img
+{
+    height: 100px;
+}
+#footerContainer div:nth-child(even)
+{
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 800px) {
+    #capabilities
+    {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    #capabilities div
+    {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #capabilities div img
+    {
+        height: 80px;
+        width: 50px;
+    }
+
+    #capabilities div:nth-child(1)
+    {
+        border-bottom: 1px solid black;
+    }
+
+    #capabilities div:nth-child(2)
+    {
+        border-bottom: 1px solid black;
+    }
+
+    #whyContainer
+    {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #tech
+    {
+        flex-direction: column;
+    }
+
+    #attention
+    {
+        text-align: center;
+    }
+
 }
