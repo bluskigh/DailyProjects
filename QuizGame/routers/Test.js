@@ -1,6 +1,7 @@
 const express = require("express"); 
 const TestModel = require("../models/TestModel");
 const ApplicationError = require("../ApplicationError");
+const ScoreModel = require("../models/ScoreModel");
 const path = require("path");
 const router = express.Router();
 
@@ -143,8 +144,8 @@ router.post("/testSubmitted", async (req, res)=>{
     try {
 
         const { currentPossibles, answer, testId } = req.body;
-        const data = await TestModel.getTestInfo(testId);
-        if (!data)
+        const testInfo = await TestModel.getTestInfo(testId);
+        if (!testInfo)
             return
         let questions = [];
         // currentPossibles is an object that contains arrays (jagged) each array in the array, is part of question x (x = index)
@@ -171,11 +172,16 @@ router.post("/testSubmitted", async (req, res)=>{
             questions.push({question: keys[i], answer: Array.isArray(answer) ? answer[i-3] : answer, picked, possibles: Array.isArray(currentPossibles) ? currentPossibles[i-3].split(",") : currentPossibles.split(','), correct: isCorrect});
         }
 
-        console.log(questions);
-
-        // equation to get the percentage.
+        // equation to get the percentage (getting the score)
         correct = Math.floor((correct/(total-3)) * 100);
-        res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions, score: correct, testInfo: data});
+
+        const scoreAdded = await ScoreModel.addScore(testInfo, questions, correct, req.session.userId);
+        if (!scoreAdded)
+            throw new ApplicationError("Could not add the score!", 404);
+
+        // HERE add to the ScoreModel
+        res.render("testScore", {title: "Test Score", username: req.session.username, stylesheets: ["css/testScore.css"], questions, score: correct, testInfo});
+
     } catch(e) { 
         console.error(e);
         throw e;

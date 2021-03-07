@@ -2,6 +2,7 @@ const express = require("express");
 const ApplicationError = require("./ApplicationError");
 const TestRouter = require("./routers/Test");
 const AuthorizationRouter = require("./routers/Authorization");
+const ScoreRouter = require("./routers/Scores");
 const PreferencesRouter = require("./routers/Preferences");
 const path = require("path");
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(AuthorizationRouter);
 app.use(TestRouter);
 app.use(PreferencesRouter);
+app.use(ScoreRouter);
 
 app.get("/", (req, res)=>{
     console.log(req.session.userId);
