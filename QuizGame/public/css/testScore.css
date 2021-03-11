@@ -1,0 +1,71 @@
+main
+{
+    width: 50%;
+}
+#testInfo
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+h1
+{
+    margin-left: 0;
+    padding-left: 0;
+}
+#testInfo p
+{
+    margin: 1em;
+}
+
+#score h1
+{
+    color: black;
+    -webkit-text-stroke: 1px white;
+}
+hr
+{
+    width: 50%;
+}
+.correct
+{
+    color: green;
+}
+.wrong
+{
+    color: darkred;
+}
+#questionsResult .picked
+{
+    opacity: 100%;
+}
+#questionsResult h3
+{
+    opacity: 50%;
+}
+#takeAgainForm
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0 2em 0;
+}
+button
+{
+    border: none;
+    color: white;
+    background-color: #2F6262;
+    padding: .5em 2em;
+    border-radius: .2em;
+    transition: linear .4s;
+}
+button:hover
+{
+    box-shadow: 0em 0em .5em rgb(199, 199, 199);
+}
+#questionsResult h1
+{
+    font-size: 2.3em;
+}

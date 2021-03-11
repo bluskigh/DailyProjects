@@ -1,0 +1,249 @@
+nav
+{
+    justify-content: space-between;
+}
+
+#tests
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* TODO: in the furture, size the test based on how many question each one has. Layout them using the giphy layout */
+    justify-content: flex-start;
+    align-items: center;
+}
+form
+{
+    padding: 0;
+    margin: 0;
+    background: transparent;
+}
+
+a:hover
+{
+    cursor: pointer;
+}
+.indivContainer
+{
+    border-radius: .3em;
+    margin: .5em;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 90%;
+    background: red;
+    align-items: center;
+    justify-content: center;
+}
+.indivContainer:hover
+{
+    cursor: pointer;
+}
+.indivContainer button:nth-child(1)
+{
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: .3em;
+}
+.indiv
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    border: 1px solid;
+}
+.indiv p
+{
+    max-width: 500px;
+    padding: 0 .2em;
+    margin-top: 0;
+}
+.indiv div
+{
+    padding: 0 2em;
+}
+#tests
+{
+    width: 100%;
+}
+#testSection
+{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.subjectSort
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: gray;
+    padding: .3em;
+    margin: .5em;
+}
+
+#firstColumn, #secondColumn, #thirdColumn
+{
+    width: 50%;
+}
+
+.addPadding
+{
+    padding: 0 1em;
+}
+
+#testsHeader
+{
+    display: flex;
+    flex-direction: row; 
+    align-items: flex-end;
+}
+#testsHeader select 
+{
+    height: 10%;
+}
+
+#addTest
+{
+    width: 100%;
+}
+#addTest button
+{
+    background: #2F6262;
+    border: none;
+    padding: .3em 0;
+    color: white;
+    border-radius: .2em;
+}
+
+/* Bubble */
+.bubble
+{
+    margin: 1em;
+    border-bottom-left-radius: 1.5em;
+    border-top-right-radius: 1.5em;
+    border-bottom-right-radius: 1.5em;
+    color: white;
+    background: #C4C4C4;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    color: black;
+    border: 1px solid red;
+}
+.mainbutton > b
+{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    color: white;
+    border-bottom-left-radius: .8em;
+    border-bottom-right-radius: .8em;
+    border-top-right-radius: 4em;
+}
+.bubble h2
+{
+    margin-bottom: 0;
+    font-family: 'Prociono', serif;
+}
+.bubble p 
+{
+    margin-top: 0;
+}
+.bubbleTestInfo .testInfo
+{
+    text-align:left;
+    padding: .5em 1em;
+}
+.bubbleTestInfo
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: fit-content;
+    align-items: center;
+}
+
+.deleteButton
+{
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 0;
+    height: 5em;
+    padding: 0 2.5em;
+    transition: .5s ease;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+.mainbutton
+{
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+.mainbutton:focus
+{
+    outline: none;
+}
+.deleteButton:hover
+{
+    box-shadow: 0em 1em 1em black;
+    transform: translateY(-3px);
+    color: black;
+}
+.bubbleTestInfo .testInfo
+{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+.bubbleTestInfo .testInfo p
+{
+}
+
+#addTest button
+{
+    width: 100%;
+}
+
+#scoresContainer
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+#scoresContainer .scoreResult
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+#scoresContainer .score
+{
+    margin-top: 0;
+    padding-top: 0;
+} 
+#scoresContainer h1
+{
+    font-size: 3em;
+}

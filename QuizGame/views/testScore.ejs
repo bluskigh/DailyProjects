@@ -1,0 +1,25 @@
+<%-include("partials/header")%>
+        <section id="testInfo">
+            <div>
+                <h1 class="testTitle"><%=testInfo.title%></h1>
+                <p><%=testInfo.desc%></p>
+            </div>
+            <div id="score">
+                <h1><%=score%>%</h1>
+            </div>
+        </section>
+        <hr>
+        <section id="questionsResult">
+            <% for (const question of questions) { %>
+                <h1 class="testTitle <%=question.correct ? 'correct' : 'wrong'%>"><%=question.question%></h1>
+                <% for (const p in question.possibles) { %>
+                    <h3 class="<%=question.possibles[p] == question.answer ? 'correct' : 'wrong'%> <%=p==question.picked ? 'picked' : ''%>"><%=question.possibles[p]%></h3>
+                <% } %>
+            <% } %>
+        </section>
+        <form id="takeAgainForm" action="/test" method="POST">
+            <button type="submit" name="testId" value="<%=testInfo._id%>">Take Again</button>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+.columnFlex
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+.columnFlex input
+{
+    width: 100%;
+}
+.question
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.delete
+{
+    width: 100%;
+}
+hr
+{
+    width: 100%;
+}

@@ -1,0 +1,44 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=kjjuu, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Prociono&family=Roboto&display=swap" rel="stylesheet"> 
+
+    <link rel="stylesheet" href="css/header.css">
+    <% if (stylesheets) { %>
+        <% for (const stylesheet of stylesheets) { %>
+            <link rel="stylesheet" href="<%=stylesheet%>">
+        <% } %>
+    <% } %>
+    <% if (username) { %>
+        <!-- <link rel="stylesheet" href="css/home.css"> -->
+    <% } %>
+    <title><%=title%></title>
+</head>
+<body>
+    <nav>
+        <div>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <% if (!username) { %>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/login">Log In</a></li>
+                <% } else { %>
+                    <li><a href="/options">Options</a></li>
+                    <li><a href="/scores">Scores</li>
+                <% } %>
+            </ul>
+            <% if (username) { %>
+                <section>
+                    <li><a href="/signout">Sign Out</a></li>
+                    <li><a href="/accountOptions"><%=username%></a></li>
+                </section>
+            <% } %>
+
+        </div>
+    </nav>
+    <main>

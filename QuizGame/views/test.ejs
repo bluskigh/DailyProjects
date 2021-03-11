@@ -1,0 +1,74 @@
+<%-include("partials/header")%>
+        <section id="testContainer" name="<%=testId%>">
+            <% if (creating) { %>
+                <h1>Test Information: </h1>
+                <form action="/createTest">
+                    <label for="title">Title: </label>
+                    <input type="text" name="title" value="<%=testInfo ? testInfo.title : 'Title here' %>" required>
+                    <label for="desc">Description: </label>
+                    <input type="text" name="desc" value="<%=testInfo ? testInfo.desc : 'Description here'%>" required>
+                    <!-- TODO: allow them add different options,load them here. -->
+                    <label for="subject">Subject: </label>
+                    <select name="subject" id="subjectContainer">
+                        <!-- TODO: do the selected for this. -->
+                    </select>
+                </form>
+                <hr>
+                <h1>Questions </h1>
+                <div id="questions">
+                    <!-- Default we are going to display one available already to edit -->
+                </div>
+                <button id="addQuestion">Add Question</button>
+                <% if (creating && testInfo) { %>
+                    <button id="done">Edit</button>
+                <% } else { %>
+                    <button id="done">Done</button>
+                <% } %>
+        </section>
+            <% } else { %>
+                <section id="testInformation" name="<%=testInfo._id%>">
+                    <b id="subject" style="background-color:<%=testInfo.subject.color%>"><%=testInfo.subject.title%></b>
+                    <h1 class="testTitle"><%=testInfo.title%></h1>
+                    <p><%=testInfo.desc%></p>
+                    <!-- THIS LINE CHANGED FROM GET TO POST THEN TO GET -->
+                    <form action="/editTest" method="GET">
+                        <input type="text" name="testId" value="<%=testInfo._id%>" class="hidden">
+                        <button type="submit" id="editTest">Edit</button>
+                    </form>
+                </section>
+                <section id="questions">
+                    <!-- here display all the questions and answeres -->
+                    <form action="/testSubmitted" method="POST">
+                        <input type="text" class="hidden" name="testId" value="<%=testInfo._id%>">
+                        <!-- ERROR HERE, when clicked somethign about selected nto defined? -->
+                        <% for (const question of questions) { %>
+                            <div class="question" name='0'>
+                                <h2>Q) <%=question.question%></h2>
+                                <!-- generate the available question-->
+                                <input type="text" class="hidden" name="currentPossibles" value="<%=question.possible%>">
+                                <input type="text" class="hidden" name="answer" value="<%=question.answer%>">
+                                <% for (const p in question.possible) { %>
+                                    <div class="questionContainer">
+                                        <!-- BIG BRUG MOMENT: instead of trying to use fetch and fancy javascript, to pass in information of the test, all I had to do is provide a value for the radio button, that wasy in the script, I can simply say... if true add to correct else do not... etc.-->
+                                        <input type="radio" name="<%=question.question%>" id="<%=question.possible[p]%><%=question.question%>" value="<%=question.possible[p] != question.answer ? '-1' : '1'%><%=p%>" onclick="selected(this)"> 
+                                        <label class="possibleLabel" for="<%=question.possible[p]%><%=question.question%>"><%=question.possible[p]%></label>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } %>
+
+                        <button id="submitButton">Submit</button>
+                    </form>
+
+                </section>
+            <% } %>
+        </section>
+    </main>
+    
+    <% if (creating) { %> 
+        <script src="js/editingTest.js"></script>
+    <% } else { %>
+        <script src="js/testing.js"></script>
+    <% } %>
+</body>
+</html>

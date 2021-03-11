@@ -1,0 +1,49 @@
+label:hover
+{
+    cursor: pointer;
+}
+input[type=radio]:hover
+{
+}
+
+h1
+{
+    margin: 0;
+}
+h2
+{
+    font-family: 'Prociono', serif;
+    font-family: 1em;
+}
+
+#testInformation
+{
+    margin: 0 auto;
+    width: 100%;
+}
+
+#questions
+{
+    margin: 0 auto;
+    width: 100%;
+}
+
+.questionContainer
+{
+    transition: .5s ease;
+}
+.questionContainer:nth-child(even)
+{
+    background: gray;
+}
+
+.questionContainer:nth-child(odd)
+{
+    background: transparent;
+}
+main
+{
+    width: 40%;
+    align-items: center;
+    margin-top: 2em;
+}
