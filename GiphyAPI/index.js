@@ -4,6 +4,7 @@ const path = require("path");
 const fetch = require("node-fetch");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 // app = Flask(__name__);
 const app = express();
 
@@ -110,16 +111,20 @@ app.post("/login", (req, res) => {
   const { username, password } = req.body;
   // TODO: figure out how to hash the password, and unhas to check
   // check if the user exists
-  UserModel.findOne({username: username, password: password})
-  .then( (r)=>{
+  UserModel.findOne({username: username})
+  .then(async (r)=>{
     if(r)
     {
-      // sign the user in...
-      req.session.user_id = r._id;
-      req.session.username = username;
+      if (await bcrypt.compare(password, r.password)) {
+        // sign the user in...
+        req.session.user_id = r._id;
+        req.session.username = username;
 
-      // redirect the user to the homepage
-      res.redirect("/");
+        // redirect the user to the homepage
+        res.redirect("/");
+      } else {
+        console.log("the password did not match");
+      }
     }
     else
     {
@@ -134,7 +139,7 @@ app.get("/signup", (req, res) => {
   res.render("enterInformation", {title: "Sign Up", login:false, username: req.session.username}); 
 });
 // if person is trying to sign up, via post requset
-app.post("/signup", (req, res) => {
+app.post("/signup", async (req, res) => {
   // validate that the confirmation and the password are the same
   const { username, password, confirmation } = req.body;
   if (password != confirmation)
@@ -143,7 +148,7 @@ app.post("/signup", (req, res) => {
   }
   // check if the username does not exist in the prorgam
   UserModel.findOne({username: username})
-  .then( (r)=>{
+  .then( async (r)=>{
     if (r)
     {
       res.render("error", {message: "That username already exist..."});
@@ -152,10 +157,13 @@ app.post("/signup", (req, res) => {
     {
       // does nto exist, so craete the user and redirect as logged in.
 
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt);
+
       // creating user item, to store in the database
-      const tempUser = new UserModel({username: username, password: password});
+      const tempUser = new UserModel({username: username, password: hash});
       // saving to the database
-      tempUser.save();
+      await tempUser.save();
 
       // storing the users information in the session (cookie?) so that I can use it while he is using the application
       req.session.user_id = tempUser._id;
