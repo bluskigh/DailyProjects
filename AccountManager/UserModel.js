@@ -113,7 +113,7 @@ module.exports.createUser = (username, password)=>{
     hash(password)
     .then((r)=>{
       // result is the hashed password
-      const temp = new UserModel({username: username, password: hash});
+      const temp = new UserModel({username: username, password: r});
       temp.save();
       resolve(temp._id);
     })
@@ -127,7 +127,7 @@ module.exports.createChild = (username, password, parent_id)=>{
   return new Promise(async (resolve, reject)=>{
     hash(password)
     .then((r)=>{
-      const temp = new ChildModel({username: username, password: hash, parent_id: parent_id});
+      const temp = new ChildModel({username: username, password: r, parent_id: parent_id});
       temp.save();
       console.log("Saved the child, ", temp._id); 
       resolve(temp._id);
@@ -146,7 +146,8 @@ module.exports.login = (username, password)=>{
       if (r)
       {
         // get the password
-        const hashed = r.password;
+        const hashed = await r.password;
+        console.log('Hashed: ', hashed)
         try{
           // compare the password given with the hashed one in the database 
           const result = await bcrypt.compare(password, hashed);

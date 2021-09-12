@@ -52,6 +52,7 @@ const verifyLogIn = (req, res, next)=>{
   if (!password)
     next(new ManagerError("You did not provide a password", 404, "/login")); 
 
+  console.log(password)
   userModel.login(username, password)
   .then((r)=>{
     // everything went well, log the user in
@@ -62,7 +63,7 @@ const verifyLogIn = (req, res, next)=>{
     // if anything went wrong with login method from the userModel, show in the error handler
     const { message="Could not log you in", status=404 } = e;
     return next(new ManagerError(message, status, "/login"));
-  });
+k  });
   // check if username even exists 
   // if not, throw an error saying that username is not in our database
   // if it does, then attempt sign in.
